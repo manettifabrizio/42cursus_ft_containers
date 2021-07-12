@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 14:15:16 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/12 19:18:03 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/12 23:39:24 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,22 @@ namespace ft
 				_capacity = (_size) ? 1 : 0;
 
 				while (_capacity <= _size)
+					_capacity *= 2;
+
+				if (_capacity > max_size())
+					_capacity = max_size();
+
+				return (_capacity);
+			}
+
+			size_type					compute_capacity( size_type n )
+			{
+				if (n > max_size())
+					throw std::length_error("Size is greater than size max.");
+
+				_capacity = (n) ? 1 : 0;
+
+				while (_capacity <= n)
 					_capacity *= 2;
 
 				if (_capacity > max_size())
@@ -243,7 +259,41 @@ namespace ft
 
 			}
 
-			size_type capacity() const;
+			/*	resize()
+				Returns the size of the storage space currently allocated for
+				the vector, expressed in terms of elements.						*/
+			size_type					capacity( void ) const
+			{
+				return ( _capacity );
+			}
+
+			/*	empty()
+				Returns whether the vector is empty.							*/
+			bool						empty( void ) const
+			{
+				if (_size == 0)
+					return ( true );
+				
+				return ( false );
+			}
+
+			void						reserve( size_type n )
+			{
+				if (n > _capacity)
+				{
+					_capacity = compute_capacity(n);
+
+					value_type	*a = _all.allocate(_capacity);
+				
+					for (int i = 0; i < _size; i++)
+						a[i] = _array[i];
+					a[_size] = val;
+
+					_all.deallocate(_array, _size);
+				
+					_array = a;
+				}
+			}
 
 			/*					-|-|-|-|-  MODIFIERS -|-|-|-|-					*/
 
@@ -285,9 +335,9 @@ namespace ft
 			{
 				if ((_size + 1) > _capacity)
 				{
-					_capacity = ((_capacity * 2) < max_size()) ? _capacity * 2 : max_size();
+					_capacity = compute_capacity(_size + 1);
 
-					T		*a = _all.allocate(_capacity);
+					value_type	*a = _all.allocate(_capacity);
 				
 					for (int i = 0; i < _size; i++)
 						a[i] = _array[i];
@@ -297,14 +347,10 @@ namespace ft
 				
 					_array = a;
 
-					_size++;
 				}
 				else
-				{
 					_array[_size] = val;
-
-					_size++;
-				}
+				_size++;
 			}
 	};
 };
