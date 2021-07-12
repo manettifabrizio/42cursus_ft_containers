@@ -6,17 +6,18 @@
 #    By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/26 17:06:32 by fmanetti          #+#    #+#              #
-#    Updated: 2021/07/09 14:12:14 by fmanetti         ###   ########.fr        #
+#    Updated: 2021/07/12 15:54:16 by fmanetti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME                    =       cont
 
-SOURCE                  =       main.cpp
+SOURCE                  =       test/main.cpp
 
 OBJ                     =       $(SOURCE:%.cpp=%.o)
 
-HEADERS                 =       
+HEADERS                 =       vector/Vector.hpp			\
+								vector/RAIterator.hpp
 
 CC                      =       clang++
 
@@ -44,7 +45,7 @@ clean:
 	@printf "Object files $(RED)removed\n$(NO_COLOR)"
 
 fclean: clean
-	@/bin/rm -rf $(NAME)
+	@/bin/rm -rf $(NAME) $(NAME).dSYM
 	@/bin/rm -rf .vscode
 	@printf "[ $(NAME) ] $(RED)removed\n$(NO_COLOR)"
 

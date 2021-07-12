@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 14:15:16 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/09 18:49:56 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/12 19:18:03 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <memory>
 #include <vector>
 #include <list>
+#include <stdexcept>
 
 #include "RAIterator.hpp"
 
@@ -36,10 +37,10 @@ namespace ft
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_pointer		const_pointer;
-			typedef	ft::RAIterator<T>								iterator;
-			typedef const ft::RAIterator<T>							const_iterator;
-			// typedef 											reverse_iterator;
-			// typedef											onst_reverse_iterator;
+			typedef	ft::RAIterator<T>							iterator;
+			typedef const ft::RAIterator<T>						const_iterator;
+			typedef ft::rev_RAIterator<T>						reverse_iterator;
+			typedef	const ft::rev_RAIterator<T>					const_reverse_iterator;
 			typedef	ptrdiff_t									difference_type;
 			typedef	size_t										size_type;
 
@@ -50,6 +51,22 @@ namespace ft
 			size_type									_capacity;
 			allocator_type								_all;
 
+			size_type					compute_capacity( void )
+			{
+				if (_size > max_size())
+					throw std::length_error("Size is greater than size max.");
+
+				_capacity = (_size) ? 1 : 0;
+
+				while (_capacity <= _size)
+					_capacity *= 2;
+
+				if (_capacity > max_size())
+					_capacity = max_size();
+
+				return (_capacity);
+			}
+
 		public:
 
 			/*		-*-*-*-*-*-*-*-  MEMBER FUNCTIONS -*-*-*-*-*-*-*-			*/
@@ -58,14 +75,17 @@ namespace ft
 
 			/* First (Default constructor)
 				Empty container, no elements									*/
-			Vector( void ) : _array(NULL), _size(0) { }
+			Vector( void ) : _array(NULL), _size(0), _capacity(0),
+				_all(allocator_type()) { }
 
 			/* Second
 				Constructs a container with n elements. Each element is a
 				copy of val.													*/	
-			Vector( size_type n, const value_type& val = value_type() ) : _size(n)
+			Vector( size_type n, const value_type& val = value_type(),
+				const allocator_type& alloc = allocator_type() ) : _size(n),
+				_capacity(compute_capacity()), _all(alloc)
 			{
-				_array = _all(_size);
+				_array = _all.allocate(_capacity);
 
 				for (int i = 0; i < n; i++)
 					_array[i] = val;
@@ -77,19 +97,25 @@ namespace ft
 				[first,last), with each element constructed from its
 				corresponding element in that range, in the same order.			*/
 			template <class InputIterator>
-			 Vector( InputIterator first, InputIterator last )
-			{}
+			Vector( InputIterator first, InputIterator last,
+				const allocator_type& alloc = allocator_type() ) :
+				_size(last - first), _capacity(compute_capacity()), _all(alloc)
+			{
+
+				_array = _all.allocate(_capacity);
+
+				for (first; first != last; first++)
+					push_back(first);
+
+			}
 			
 			/* Fourth
 				Constructs a container with a copy of each of the elements
 				in x, in the same order.										*/
-			Vector( const Vector &src )
+			Vector( const Vector &src ) : _size(src._size),
+				_capacity(src._capacty), _all(src._all)
 			{
-
-				_size = src._size;
-
-				_array = _all(_size);
-				
+				_array = _all.allocate(_capacity);
 
 				for (int i = 0; i < _size; i++)
 					_array[i] = src._array[i];
@@ -102,8 +128,6 @@ namespace ft
 				storage capacity allocated by the vector using its allocator.	*/
 			~Vector( void )
 			{
-				std::allocator<T>		a;
-
 				_all.deallocate(_array, _size);
 
 				_array = NULL;
@@ -117,12 +141,14 @@ namespace ft
 			{
 				_size = x._size;
 
-				_array = _all.allocate(_size);
+				_capacity = x._capacity;
+
+				_array = _all.allocate(_capacity);
 
 				for (int i = 0; i < _size; i++)
 					_array[i] = x._array[i];
 				
-				return (*this);
+				return ( *this );
 			}
 
 			/*					-|-|-|-|-  ITERATORS -|-|-|-|-					*/
@@ -130,20 +156,156 @@ namespace ft
 			/* begin()
 				Returns an iterator pointing to the first element in the
 				vector.															*/
-			iterator			begin( void )
+			iterator					begin( void )
 			{
-				return ( iterator(&(_array[0])));
+				return ( iterator(&(_array[0])) );
 			}
 
-			const_iterator		begin( void ) const
+			const_iterator				begin( void ) const
 			{
-				return ( &(_array[0]) );
+				return ( iterator(&(_array[0])) );
+			}
+
+			/* rbegin()
+				Returns a reverse iterator pointing to the last element in the
+				vector.															*/
+			reverse_iterator 			rbegin( void )
+			{
+				return ( reverse_iterator(&(_array[_size - 1])) );
+			}
+
+			const_reverse_iterator 		rbegin( void ) const
+			{
+				return ( reverse_iterator(&(_array[_size - 1])) );
 			}
 
 			/* end()
 				Returns an iterator referring to the past-the-end element
-				in the vector container.										*/												
+				in the vector container. If the container is empty, this
+				function returns the same as vector::begin.						*/	
+			iterator					end( void )
+			{
+				if (_size > 0)
+					return ( iterator(&(_array[_size])) );
+				
+				return ( iterator(&(_array[0])) );
+			}
 
+			const_iterator				end( void ) const
+			{
+				if (_size > 0)
+					return ( iterator(&(_array[_size])) );
+				
+				return ( iterator(&(_array[0])) );
+			}							
+
+			/* rend()
+				Returns a reverse iterator pointing to the theoretical element
+				preceding the first element in the vector.						*/	
+			reverse_iterator			rend( void )
+			{
+				return ( reverse_iterator(&(_array[-1])) );
+			}
+
+			const_reverse_iterator		rend( void ) const
+			{
+				return ( reverse_iterator(&(_array[_size])) );
+			}
+
+			/*					-|-|-|-|-  CAPACITY -|-|-|-|-					*/
+	
+			/*	size()
+				Returns the number of elements in the vector.					*/
+			size_type					size( void ) const
+			{
+				return ( _size );
+			}
+
+			/*	max_size()
+				Returns the maximum number of elements that the vector can
+				hold. 															*/
+			size_type					max_size( void ) const
+			{
+				return ( _all.max_size() );
+			}
+
+			/*	resize()
+				Resizes the container so that it contains n elements.			*/
+			void						resize( size_type n, value_type val
+				= value_type() )
+			{
+				if (n < _size)
+					for (iterator it = end(); _size > n; it--)
+						pop_back(it);
+				else
+					for (iterator it = end(); _size < n; it++)
+						push_back(val);
+
+			}
+
+			size_type capacity() const;
+
+			/*					-|-|-|-|-  MODIFIERS -|-|-|-|-					*/
+
+			/*	assign()
+				Assigns new contents to the vector, replacing its current
+				contents, and modifying its size accordingly.					*/
+			template <class InputIterator>
+  			void						assign( InputIterator first,
+				InputIterator last )
+			{
+				_all.deallocate(_array, sizeof(_array));
+
+				_size = last - first;
+
+				_capacity = compute_capacity();
+
+				_array = _all.allocate(_capacity);
+
+				for (first; first != last; first++)
+					push_back(first);
+			}
+
+			void						assign ( size_type n,
+				const value_type &val )
+			{
+				_all.deallocate(_array, _size);
+
+				_size = n;
+
+				_capacity = compute_capacity();
+
+				_array = _all.allocate(_capacity);
+
+				for (int i = 0; i < n; i++)
+					push_back(val);
+			}
+
+			void						push_back( const value_type& val )
+			{
+				if ((_size + 1) > _capacity)
+				{
+					_capacity = ((_capacity * 2) < max_size()) ? _capacity * 2 : max_size();
+
+					T		*a = _all.allocate(_capacity);
+				
+					for (int i = 0; i < _size; i++)
+						a[i] = _array[i];
+					a[_size] = val;
+
+					_all.deallocate(_array, _size);
+				
+					_array = a;
+
+					_size++;
+				}
+				else
+				{
+					_array[_size] = val;
+
+					_size++;
+				}
+			}
 	};
 };
 

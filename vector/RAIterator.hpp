@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 13:45:51 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/09 18:36:03 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/12 14:51:08 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,8 @@
 namespace ft {
 
 	/*	Random Access Iterator class template									*/
-	template < typename T >
-	class RAIterator : public std::iterator<
-		std::random_access_iterator_tag, T >
+	template < typename Iterator >
+	class RAIterator
 	{
 		public:
 	
@@ -28,9 +27,9 @@ namespace ft {
 
 			RAIterator( void ) : _p(nullptr) { }
 
-			RAIterator( T *p ) : _p(p) { }
+			RAIterator( Iterator *p ) : _p(p) { }
 			
-			RAIterator( const T *p ) : _p(p) { }
+			RAIterator( const Iterator *p ) : _p(p) { }
 
 			RAIterator( const RAIterator &src )
 			{
@@ -43,7 +42,7 @@ namespace ft {
 
 			/* Assignation														*/
 
-			RAIterator	&operator=( const RAIterator &rhs )
+			RAIterator			&operator=( const RAIterator &rhs )
 			{
 				_p = rhs._p;
 
@@ -52,7 +51,7 @@ namespace ft {
 
 			/* Comparison														*/
 
-			bool		operator==( const RAIterator &rhs )
+			bool				operator==( const RAIterator &rhs )
 			{
 				if (_p == rhs._p)
 					return (true);
@@ -60,24 +59,24 @@ namespace ft {
 				return (false);
 			}
 
-			bool		operator!=( const RAIterator &rhs )
+			bool				operator!=( const RAIterator &rhs )
 			{
 				return !(this == rhs);
 			}
 
 			/* Dereference														*/
 			
-			T			&operator*( void )
+			Iterator			&operator*( void )
 			{
 				return (*_p);
 			}
 
-			T			*operator->( void )
+			Iterator			*operator->( void )
 			{
 				return (_p);
 			}
 
-			T			operator[]( std::size_t i )
+			Iterator			operator[]( std::size_t i )
 			{
 				return(_p[i]);
 			}
@@ -85,7 +84,7 @@ namespace ft {
 			/* Increment/Decrement												*/
 			
 			// prefix 
-			RAIterator	&operator++( void )
+			RAIterator			&operator++( void )
 			{
 				++_p;
 
@@ -93,7 +92,7 @@ namespace ft {
 			}
 		
 			// postfix
-			RAIterator	operator++( int )
+			RAIterator			operator++( int )
 			{
 				RAIterator old = *this;
 				operator++();
@@ -102,7 +101,7 @@ namespace ft {
 			}
 		
 			// prefix
-			RAIterator& operator--( void )
+			RAIterator&			operator--( void )
 			{
 				--_p;
 
@@ -110,7 +109,7 @@ namespace ft {
 			}
 		
 			// postfix
-			RAIterator operator--( int )
+			RAIterator			operator--( int )
 			{
 				RAIterator old = *this;
 				operator--();
@@ -120,23 +119,23 @@ namespace ft {
 
 			/* Arithmethic														*/
 
-			RAIterator	operator+( int const n )
+			RAIterator			operator+( const int n )
 			{
 				RAIterator	tmp = *this;
-				tmp._p =+ n;
+				tmp._p += n;
 
 				return (tmp);
 			}
 
-			RAIterator	operator-( int const n )
+			RAIterator			operator-( const int n )
 			{
 				RAIterator	tmp = *this;
-				tmp._p =- n;
+				tmp._p -= n;
 
 				return (tmp);
 			}
 
-			size_t		operator-( RAIterator const *rhs )
+			size_t				operator-( RAIterator const *rhs )
 			{
 				RAIterator	tmp = *this;
 
@@ -145,7 +144,7 @@ namespace ft {
 			
 			/* Comparison														*/
 
-			bool		operator<( const RAIterator &rhs )
+			bool				operator<( const RAIterator &rhs )
 			{
 				if (this->_p < rhs._p )
 					return (true);
@@ -153,25 +152,155 @@ namespace ft {
 				return (false);
 			}
 			
-			bool		operator>( const RAIterator &rhs )
+			bool				operator>( const RAIterator &rhs )
 			{
 				return (rhs < this);
 			}
 			
-			bool		operator<=( const RAIterator &rhs )
+			bool				operator<=( const RAIterator &rhs )
 			{
 				return !(this > rhs);
 			}
 			
-			bool		operator>=( const RAIterator &rhs )
+			bool				operator>=( const RAIterator &rhs )
 			{
 				return !(this < rhs);
 			}
 
 		private:
 	
-			T						*_p;
+			Iterator						*_p;
 	
+	};
+
+	/*	Reverse Random Access Iterator class template							*/
+	template < class Iterator >
+	class rev_RAIterator
+	{
+		public:
+
+			/*					CONSTRUCTORS AND DESTRUCTOR						*/
+
+			rev_RAIterator( void ) : _p(nullptr) { }
+
+			explicit rev_RAIterator( Iterator *p ) : _p(p) { }
+			
+  			rev_RAIterator ( const rev_RAIterator &rev_it )
+			{
+				_p = rev_it._p;
+			}
+	
+			Iterator			base( void ) const
+			{
+				Iterator		ret(_p);
+
+				return (ret);
+			}
+
+			/*						OPERATORS OVERLOAD							*/
+
+			// /* Assignation														*/
+
+			// rev_RAIterator		&operator=( const rev_RAIterator &rhs )
+			// {
+			// 	_p = rhs._p;
+
+			// 	return (*this);
+			// }
+
+			/* Comparison														*/
+
+			// bool				operator==( const rev_RAIterator &rhs )
+			// {
+			// 	if (_p == rhs._p)
+			// 		return (true);
+			
+			// 	return (false);
+			// }
+
+			// bool				operator!=( const rev_RAIterator &rhs )
+			// {
+			// 	return !(this == rhs);
+			// }
+
+			/* Dereference														*/
+			
+			Iterator			&operator*( void )
+			{
+				Iterator		ret(_p);
+
+				ret--;
+
+				return (*ret);
+			}
+
+			Iterator			*operator->( void )
+			{
+				return (&(operator*()));
+			}
+
+			Iterator			operator[]( std::size_t i )
+			{
+				return(_p[-i-1]);
+			}
+
+			/* Increment/Decrement												*/
+			
+			// prefix 
+			rev_RAIterator		&operator++( void )
+			{
+				--_p;
+
+				return (*this);
+			}
+		
+			// postfix
+			rev_RAIterator		operator++( int )
+			{
+				rev_RAIterator old = *this;
+				operator++();
+				
+				return (old);
+			}
+		
+			// prefix
+			rev_RAIterator& 	operator--( void )
+			{
+				++_p;
+
+				return (*this);
+			}
+		
+			// postfix
+			rev_RAIterator 		operator--( int )
+			{
+				rev_RAIterator old = *this;
+				operator--();
+				
+				return (old);
+			}
+
+			/* Arithmethic														*/
+
+			rev_RAIterator		operator+( const int n )
+			{
+				rev_RAIterator	tmp = *this;
+				tmp._p =+ n;
+
+				return (tmp);
+			}
+
+			rev_RAIterator		operator-( const int n )
+			{
+				rev_RAIterator	tmp = *this;
+				tmp._p =- n;
+
+				return (tmp);
+			}
+
+		private:
+	
+			Iterator						*_p;
 	};
 }
 
