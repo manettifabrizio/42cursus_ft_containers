@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 13:45:51 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/12 14:51:08 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/13 13:01:19 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ namespace ft {
 
 			bool				operator!=( const RAIterator &rhs )
 			{
-				return !(this == rhs);
+				return !(*this == rhs);
 			}
 
 			/* Dereference														*/
@@ -142,6 +142,11 @@ namespace ft {
 				return (tmp._p - rhs->_p);
 			}
 			
+			friend inline Iterator	operator-(const RAIterator &lhs, const RAIterator &rhs)
+			{
+				return (lhs._p - rhs._p);
+			}
+
 			/* Comparison														*/
 
 			bool				operator<( const RAIterator &rhs )

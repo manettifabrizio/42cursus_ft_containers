@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/09 14:15:16 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/13 09:25:54 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/13 12:03:22 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/07/13 17:19:57 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ namespace ft
 {
 
 	template < class T, class Alloc = std::allocator<T> >
-	class Vector
+	class vector
 	{
-		private:
+		public:
 
 			/*							MEMBER TYPES							*/
 
@@ -44,6 +44,8 @@ namespace ft
 			typedef	ptrdiff_t									difference_type;
 			typedef	size_t										size_type;
 
+		private:
+
 			/*							VARIABLES								*/
 
 			T											*_array;
@@ -53,12 +55,12 @@ namespace ft
 
 			size_type					compute_capacity( void )
 			{
-				if (_size > max_size())
+				if (_size > max_size() || _capacity == max_size())
 					throw std::length_error("Size is greater than size max.");
 
 				_capacity = (_size) ? 1 : 0;
 
-				while (_capacity <= _size)
+				while (_capacity && _capacity <= _size)
 					_capacity *= 2;
 
 				if (_capacity > max_size())
@@ -91,13 +93,13 @@ namespace ft
 
 			/* First (Default constructor)
 				Empty container, no elements									*/
-			Vector( void ) : _array(NULL), _size(0), _capacity(0),
+			vector( void ) : _array(NULL), _size(0), _capacity(0),
 				_all(allocator_type()) { }
 
 			/* Second
 				Constructs a container with n elements. Each element is a
 				copy of val.													*/	
-			Vector( size_type n, const value_type& val = value_type(),
+			vector( size_type n, const value_type& val = value_type(),
 				const allocator_type& alloc = allocator_type() ) : _size(n),
 				_capacity(compute_capacity()), _all(alloc)
 			{
@@ -113,22 +115,23 @@ namespace ft
 				[first,last), with each element constructed from its
 				corresponding element in that range, in the same order.			*/
 			template <class InputIterator>
-			Vector( InputIterator first, InputIterator last,
+			vector( InputIterator first, InputIterator last,
 				const allocator_type& alloc = allocator_type() ) :
-				_size(last - first), _capacity(compute_capacity()), _all(alloc)
+				_array(nullptr), _size(0), _capacity(compute_capacity()),
+				_all(alloc)
 			{
+				std::cout	<< "capacity:" << _capacity << std::endl
+							<< "size:" << _size << std::endl;
 
-				_array = _all.allocate(_capacity);
-
-				for (first; first != last; first++)
-					push_back(first);
+				for (; first != last; first++)
+					push_back(*first);
 
 			}
 			
 			/* Fourth
 				Constructs a container with a copy of each of the elements
 				in x, in the same order.										*/
-			Vector( const Vector &src ) : _size(src._size),
+			vector( const vector &src ) : _size(src._size),
 				_capacity(src._capacty), _all(src._all)
 			{
 				_array = _all.allocate(_capacity);
@@ -142,7 +145,7 @@ namespace ft
 
 			/*	This destroys all container elements, and deallocates all the
 				storage capacity allocated by the vector using its allocator.	*/
-			~Vector( void )
+			~vector( void )
 			{
 				_all.deallocate(_array, _size);
 
@@ -154,7 +157,7 @@ namespace ft
 
 			/*	Assign content
 				Copies all the elements from x into the container.				*/
-			Vector				&operator=( const Vector &x )
+			vector				&operator=( const vector &x )
 			{
 				if (_array)
 					_all.deallocate(_array, _size);
@@ -179,10 +182,12 @@ namespace ft
 				return ( _array[n] );
 			}
 
-			const_reference				operator[]( size_type n )
+			const_reference				operator[]( size_type n ) const
 			{
 				return ( _array[n] );
 			}
+
+
 
 			/*					-|-|-|-|-  ITERATORS -|-|-|-|-					*/
 
@@ -300,14 +305,20 @@ namespace ft
 				{
 					_capacity = compute_capacity(n);
 
+					// std::cout << "reserve: " << _capacity << std::endl;
+
 					value_type	*a = _all.allocate(_capacity);
 				
-					for (int i = 0; i < _size; i++)
+					for (size_type i = 0; i < _size; i++)
 						a[i] = _array[i];
 
 					_all.deallocate(_array, _size);
 				
 					_array = a;
+
+					// for (iterator it = begin(); it != end(); ++it)
+					// 	std::cout << *it << ' ';
+					// std::cout << std::endl;
 				}
 			}
 
@@ -317,18 +328,42 @@ namespace ft
 				Returns a reference to the element at position n in the vector.	*/
 			reference					at( size_type n )
 			{
-				if (n < 0 || n > (size - 1))
+				if (n < 0 || n > (_size - 1))
 					throw std::out_of_range("Elem out of range requested");
 
 				return ( _array[n] );
 			}
 
-			const_reference				at( size_type n )
+			const_reference				at( size_type n ) const
 			{
-				if (n < 0 || n > (size - 1))
+				if (n < 0 || n > (_size - 1))
 					throw std::out_of_range("Elem out of range requested");
 
 				return ( _array[n] );
+			}
+
+			/*	front()
+				Returns a reference to the first element in the vector.			*/
+			reference					front( void )
+			{
+				return ( _array[0] );
+			}
+
+			const_reference				front( void ) const
+			{
+				return ( _array[0] );
+			}
+
+			/*	back()
+				Returns a reference to the last element in the vector.			*/
+			reference					back( void )
+			{
+				return ( _array[_size - 1] );
+			}
+
+			const_reference				back( void ) const
+			{
+				return ( _array[_size - 1] );
 			}
 
 			/*					-|-|-|-|-  MODIFIERS -|-|-|-|-					*/
@@ -367,6 +402,10 @@ namespace ft
 					push_back(val);
 			}
 
+			/*	push_back()
+				Adds a new element at the end of the vector, after its current
+				last element. The content of val is copied (or moved) to the
+				new element.													*/
 			void						push_back( const value_type& val )
 			{
 				if ((_size + 1) > _capacity)
@@ -375,7 +414,7 @@ namespace ft
 
 					value_type	*a = _all.allocate(_capacity);
 				
-					for (int i = 0; i < _size; i++)
+					for (size_type i = 0; i < _size; i++)
 						a[i] = _array[i];
 					a[_size] = val;
 
@@ -387,6 +426,163 @@ namespace ft
 				else
 					_array[_size] = val;
 				_size++;
+			}
+
+			/*	pop_back()
+				Removes the last element in the vector, effectively reducing
+				the container size by one.										*/
+			void						pop_back( void )
+			{
+				if (_size > 0)
+				{
+					_all.destroy(end() - 1);
+					_size--;
+				}
+			}
+
+			/*	insert()
+				The vector is extended by inserting new elements before the
+				element at the specified position, effectively increasing the
+				container size by the number of elements inserted.				*/
+			iterator					insert ( iterator position,
+				const value_type& val )
+			{
+
+				if (position != end())
+				{
+					reserve(_size + 1);
+
+					iterator it = end();
+
+					for (; it != position; --it)
+						*it = *(it - 1);
+
+					*position = val;
+
+					_size++;
+
+					return ( position );
+				}
+				else
+					push_back(val);
+				
+				return ( end() - 1 );
+			}
+
+			/*	Have to use enable_if + is_integer to make compilator to choose second overload */
+
+			void						insert( iterator position,
+				int n, const value_type &val )
+			{
+
+				std::cout << "One" << std::endl;
+
+				if (position != end() - 1)
+				{
+					size_type pos = position - begin();
+
+					// std::cout << "before: ";
+					// for (iterator it = begin(); it != end(); ++it)
+					// 	std::cout << *it << ' ';
+					// std::cout << std::endl;
+
+					reserve(_size + n);
+
+					position = begin() + pos;
+
+					// std::cout << "after: ";
+					// for (iterator it = begin(); it != end() + n; ++it)
+					// 	std::cout << *it << ' ';
+					// std::cout << std::endl;
+
+					// std::cout 	<< "position: " << *position << std::endl
+					// 			<< "position + n: " << *(position + n) << std::endl;
+
+					iterator it = position + n;
+
+					for (; it != (end() + n); ++it)
+						*it = *(it - n);
+
+					// for (it = begin(); it != end(); ++it)
+					// 	std::cout << *it << ' ';
+					// std::cout << std::endl;
+					
+					it = position;
+
+					for (; it != (position + n); ++it)
+						*it = val;
+
+					_size += n;
+				}
+				else
+					for (int x = 0; x < n; x++)
+						push_back(val);
+			}
+	
+			template <class InputIterator>
+			void						insert( iterator position,
+				InputIterator first, InputIterator last )
+			{
+
+				size_type n = last - first;
+
+				if (position != end())
+				{
+					size_type pos = position - begin();
+
+					// std::cout << "before: ";
+					// for (iterator it = begin(); it != end(); ++it)
+					// 	std::cout << *it << ' ';
+					// std::cout << std::endl;
+
+					reserve(_size + n);
+
+					position = begin() + pos;
+
+					// std::cout << "after: ";
+					// for (iterator it = begin(); it != end() + n; ++it)
+					// 	std::cout << *it << ' ';
+					// std::cout << std::endl;
+
+					// std::cout 	<< "position: " << *position << std::endl
+					// 			<< "position + n: " << *(position + n) << std::endl;
+
+					iterator it = position + n;
+
+					for (; it != (end() + n); ++it)
+						*it = *(it - n);
+
+					// for (it = begin(); it != end(); ++it)
+					// 	std::cout << *it << ' ';
+					// std::cout << std::endl;
+					
+					it = position;
+
+					for (; it != position + n; ++it)
+						*it = *(first++);
+
+					_size += n;
+				}
+				else
+					for (size_type x = 0; x < n; x++)
+						push_back(*(first++));
+			}
+		
+			/*	erase()
+				Removes from the vector either a single element (position)
+				or a range of elements ([first,last)).							*/
+			iterator				erase( iterator position )
+			{
+				_all.destroy(position);
+				if (end() - position > 0)
+					for (iterator it = position; it != end; ++it)
+						*it = *(it + 1);
+				_size--;
+			}
+
+			iterator				erase( iterator first, iterator last )
+			{
+
 			}
 	};
 };
