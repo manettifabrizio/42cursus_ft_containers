@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 14:15:16 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/12 23:39:24 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/13 09:25:54 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,9 +152,13 @@ namespace ft
 
 			/*						OPERATOR OVERLOAD							*/
 
-			/*	Copies all the elements from x into the container.				*/
+			/*	Assign content
+				Copies all the elements from x into the container.				*/
 			Vector				&operator=( const Vector &x )
 			{
+				if (_array)
+					_all.deallocate(_array, _size);
+
 				_size = x._size;
 
 				_capacity = x._capacity;
@@ -165,6 +169,19 @@ namespace ft
 					_array[i] = x._array[i];
 				
 				return ( *this );
+			}
+
+			/*	Access element
+				Returns a reference to the element at position n in the vector
+				container.														*/
+			reference					operator[]( size_type n )
+			{
+				return ( _array[n] );
+			}
+
+			const_reference				operator[]( size_type n )
+			{
+				return ( _array[n] );
 			}
 
 			/*					-|-|-|-|-  ITERATORS -|-|-|-|-					*/
@@ -287,12 +304,31 @@ namespace ft
 				
 					for (int i = 0; i < _size; i++)
 						a[i] = _array[i];
-					a[_size] = val;
 
 					_all.deallocate(_array, _size);
 				
 					_array = a;
 				}
+			}
+
+			/*				-|-|-|-|-  ELEMENT ACCESS -|-|-|-|-					*/
+
+			/*	at()
+				Returns a reference to the element at position n in the vector.	*/
+			reference					at( size_type n )
+			{
+				if (n < 0 || n > (size - 1))
+					throw std::out_of_range("Elem out of range requested");
+
+				return ( _array[n] );
+			}
+
+			const_reference				at( size_type n )
+			{
+				if (n < 0 || n > (size - 1))
+					throw std::out_of_range("Elem out of range requested");
+
+				return ( _array[n] );
 			}
 
 			/*					-|-|-|-|-  MODIFIERS -|-|-|-|-					*/
