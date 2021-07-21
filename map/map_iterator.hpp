@@ -1,23 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   iterator.hpp                                     :+:      :+:    :+:   */
+/*   map_iterator.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/09 13:45:51 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/16 16:30:22 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/07/18 19:29:00 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
 
-#include <iterator>
-
 namespace ft {
 
-	/*	Random Access Iterator class template									*/
+	/*	Bidirectional Iterator class template
+		Bidirectional iterators are iterators that can be used to access the
+		sequence of elements in a range in both directions (towards the end
+		and towards the beginning).
+	*/
+
 	template < typename Iter >
 	class iterator
 	{
@@ -45,15 +48,6 @@ namespace ft {
 
 			/*						OPERATORS OVERLOAD							*/
 
-			// /* Assignation														*/
-
-			// iterator			&operator=( const iterator &rhs )
-			// {
-			// 	_p = rhs._p;
-
-			// 	return (*this);
-			// }
-
 			/* Comparison														*/
 
 			bool				operator==( const iterator &rhs ) const
@@ -76,11 +70,6 @@ namespace ft {
 			Iter			*operator->( void ) const
 			{
 				return (_p);
-			}
-
-			Iter			operator[]( std::size_t i )
-			{
-				return(_p[i]);
 			}
 
 			/* Increment/Decrement												*/
@@ -119,58 +108,6 @@ namespace ft {
 				return (old);
 			}
 
-			/* Arithmethic														*/
-
-			iterator			operator+( const int n )
-			{
-				iterator	tmp = *this;
-				tmp._p += n;
-
-				return (tmp);
-			}
-
-			iterator			operator-( const int n )
-			{
-				iterator	tmp = *this;
-				tmp._p -= n;
-
-				return (tmp);
-			}
-
-			size_t				operator-( iterator const *rhs )
-			{
-				iterator	tmp = *this;
-
-				return (tmp._p - rhs->_p);
-			}
-			
-			friend inline size_t	operator-(const iterator &lhs, const iterator &rhs)
-			{
-				return (lhs._p - rhs._p);
-			}
-
-			/* Comparison														*/
-
-			bool				operator<( const iterator &rhs )
-			{
-				return (this->_p < rhs._p );
-			}
-			
-			bool				operator>( const iterator &rhs )
-			{
-				return (rhs < this);
-			}
-			
-			bool				operator<=( const iterator &rhs )
-			{
-				return !(this > rhs);
-			}
-			
-			bool				operator>=( const iterator &rhs )
-			{
-				return !(this < rhs);
-			}
-
 		private:
 	
 			Iter						*_p;
@@ -204,15 +141,6 @@ namespace ft {
 			}
 
 			/*						OPERATORS OVERLOAD							*/
-
-			// /* Assignation														*/
-
-			// const_iterator			&operator=( const const_iterator &rhs )
-			// {
-			// 	_p = rhs._p;
-
-			// 	return (*this);
-			// }
 
 			/* Comparison														*/
 

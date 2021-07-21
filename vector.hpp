@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 12:03:22 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/18 03:57:32 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/21 13:23:27 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 
 #include <iostream>
 #include <memory>
-#include <vector>
-#include <list>
+// #include <vector>
+// #include <list>
 #include <stdexcept>
-#include <type_traits>
+// #include <type_traits>
 
-#include "vector/iterator.hpp"
-#include "vector/reverse_iterator.hpp"
+#include "vector/vector_iterator.hpp"
+#include "vector/vector_reverse_iterator.hpp"
 #include "vector/type_traits.hpp"
 
 namespace ft
@@ -39,10 +39,10 @@ namespace ft
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_pointer		const_pointer;
-			typedef	ft::iterator<T>								iterator;
-			typedef ft::const_iterator<T>						const_iterator;
-			typedef ft::reverse_iterator<T>						reverse_iterator;
-			typedef	const ft::reverse_iterator<T>				const_reverse_iterator;
+			typedef	ft::iterator<pointer>						iterator;
+			typedef ft::iterator<const_pointer>					const_iterator;
+			typedef ft::reverse_iterator<iterator>				reverse_iterator;
+			typedef	ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 			typedef	ptrdiff_t									difference_type;
 			typedef	size_t										size_type;
 
@@ -87,6 +87,24 @@ namespace ft
 				return (_capacity);
 			}
 
+			void						destroy_array( void )
+			{
+			// 	std::cout	<< "Destroy _array" << std::endl
+			// 				<< "_size: " << _size << std::endl
+			// 				<< "_capacity: " << _capacity << std::endl;
+
+				if (_array)
+				{
+					// std::cout << "_size:" << _size << std::endl;
+
+					for (iterator it = begin(); it != end(); ++it)
+						_all.destroy(it.base());
+					_all.deallocate(_array, _capacity);
+
+					_array = NULL;
+				}
+			}
+
 		public:
 
 			/*		-*-*-*-*-*-*-*-  MEMBER FUNCTIONS -*-*-*-*-*-*-*-			*/
@@ -95,8 +113,11 @@ namespace ft
 
 			/* First (Default constructor)
 				Empty container, no elements									*/
-			vector( void ) : _array(NULL), _size(0), _capacity(0),
-				_all(allocator_type()) { }
+			vector( const allocator_type& alloc = allocator_type() ) :
+				_array(NULL), _size(0), _capacity(0), _all(alloc)
+			{
+				// std::cout << "First constructor" << std::endl;
+			}
 
 			/* Second
 				Constructs a container with n elements. Each element is a
@@ -105,10 +126,12 @@ namespace ft
 				const allocator_type& alloc = allocator_type() ) : _size(n),
 				_capacity(compute_capacity()), _all(alloc)
 			{
+				// std::cout << "Constructor II: " << n << std::endl;
+
 				_array = _all.allocate(_capacity);
 
 				for (size_type i = 0; i < n; i++)
-					_array[i] = val;
+					_all.construct(&(_array[i]), val);
 
 			}
 			
@@ -120,14 +143,14 @@ namespace ft
 			vector( InputIterator first, InputIterator last,
 				const allocator_type& alloc = allocator_type(), 
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value, int>::type = 0 ) :
-				_array(nullptr), _size(0), _capacity(compute_capacity()),
-				_all(alloc)
+				_size(last - first), _capacity(compute_capacity()), _all(alloc)
 			{
-				// std::cout	pacity:" << _capacity << std::endl
-				// 			<< "size:" << _size << std::endl;
+				_array = _all.allocate(_capacity);
+
+				size_t	i = 0;
 
 				for (; first != last; first++)
-					push_back(*first);
+					_all.construct(&(_array[i++]), *first);
 
 			}
 			
@@ -140,7 +163,7 @@ namespace ft
 				_array = _all.allocate(_capacity);
 
 				for (size_type i = 0; i < _size; i++)
-					_array[i] = src._array[i];
+					_all.construct(&(_array[i]), src._array[i]);
 
 			}
 
@@ -150,10 +173,8 @@ namespace ft
 				storage capacity allocated by the vector using its allocator.	*/
 			~vector( void )
 			{
-				_all.deallocate(_array, _size);
-
-				_array = NULL;
-
+				// std::cout << "Destructor" << std::endl;
+				destroy_array();
 			}
 
 			/*						OPERATOR OVERLOAD							*/
@@ -162,8 +183,7 @@ namespace ft
 				Copies all the elements from x into the container.				*/
 			vector				&operator=( const vector &x )
 			{
-				if (_array)
-					_all.deallocate(_array, _size);
+				destroy_array();
 
 				_size = x._size;
 
@@ -172,7 +192,7 @@ namespace ft
 				_array = _all.allocate(_capacity);
 
 				for (size_type i = 0; i < _size; i++)
-					_array[i] = x._array[i];
+					_all.construct(&(_array[i]), x._array[i]);
 				
 				return ( *this );
 			}
@@ -212,12 +232,12 @@ namespace ft
 				vector.															*/
 			reverse_iterator 			rbegin( void )
 			{
-				return ( reverse_iterator(&(_array[_size - 1])) );
+				return ( reverse_iterator(end()) );
 			}
 
 			const_reverse_iterator 		rbegin( void ) const
 			{
-				return ( reverse_iterator(&(_array[_size - 1])) );
+				return ( reverse_iterator(end()) );
 			}
 
 			/* end()
@@ -245,12 +265,12 @@ namespace ft
 				preceding the first element in the vector.						*/	
 			reverse_iterator			rend( void )
 			{
-				return ( reverse_iterator(&(_array[-1])) );
+				return ( reverse_iterator(begin()) );
 			}
 
 			const_reverse_iterator		rend( void ) const
 			{
-				return ( reverse_iterator(&(_array[_size])) );
+				return ( reverse_iterator(begin()) );
 			}
 
 			/*					-|-|-|-|-  CAPACITY -|-|-|-|-					*/
@@ -304,24 +324,22 @@ namespace ft
 
 			void						reserve( size_type n )
 			{
+				if (n > max_size())
+					throw std::length_error("Size is greater than size max.");
+
 				if (n > _capacity)
 				{
+					value_type	*a = _all.allocate(n);
+
+					for (size_type i = 0; i < _size; i++)
+						_all.construct(&(a[i]), _array[i]);
+
+					destroy_array();
+				
 					_capacity = n;
 
-					// std::cout << "reserve: " << _capacity << std::endl;
-
-					value_type	*a = _all.allocate(_capacity);
-				
-					for (size_type i = 0; i < _size; i++)
-						a[i] = _array[i];
-
-					_all.deallocate(_array, _size);
-				
 					_array = a;
 
-					// for (iterator it = begin(); it != end(); ++it)
-					// 	std::cout << *it << ' ';
-					// std::cout << std::endl;
 				}
 			}
 
@@ -379,15 +397,17 @@ namespace ft
 				InputIterator last,
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value, int>::type = 0 )
 			{
-				for (iterator it = begin(); it != end(); ++it)
-					_all.destroy(it.base());
-				_all.deallocate(_array, _capacity);
+				if (_size > 0)
+				{
+					size_t	size = last - first;
 
-				_size = 0;
+					// std::cout << "size:" << size << std::endl;
 
-				_capacity = compute_capacity();
+					if (size > _capacity)
+						reserve(size);
 
-				_array = _all.allocate(_capacity);
+					clear();
+				}
 
 				for (; first != last; first++)
 					push_back(*first);
@@ -396,13 +416,13 @@ namespace ft
 			void						assign ( size_type n,
 				const value_type &val )
 			{
-				_all.deallocate(_array, _size);
+				// std::cout << "Assign II" << std::endl;
+
+				destroy_array();
 
 				_size = 0;
 
-				_capacity = compute_capacity();
-
-				_array = _all.allocate(_capacity);
+				_capacity = 0;
 
 				for (size_type i = 0; i < n; i++)
 					push_back(val);
@@ -414,23 +434,26 @@ namespace ft
 				new element.													*/
 			void						push_back( const value_type& val )
 			{
+				// std::cout << "push_back: " << _size << std::endl;
+
 				if ((_size + 1) > _capacity)
 				{
+
 					_capacity = compute_capacity(_size + 1);
 
 					value_type	*a = _all.allocate(_capacity);
-				
-					for (size_type i = 0; i < _size; i++)
-						a[i] = _array[i];
-					a[_size] = val;
 
-					_all.deallocate(_array, _size);
-				
+					for (size_type i = 0; i < _size; i++)
+						_all.construct(&(a[i]), _array[i]);
+
+					destroy_array();
+
 					_array = a;
 
+					_all.construct(&(_array[_size]), val);
 				}
 				else
-					_array[_size] = val;
+					_all.construct(&(_array[_size]), val);
 				_size++;
 			}
 
@@ -458,14 +481,15 @@ namespace ft
 
 				if (position != end())
 				{
+					// std::cout << "ciao << std::endl;
 					reserve(_size + 1);
 
 					iterator it = end();
 
 					for (; it != position; --it)
-						*it = *(it - 1);
+						_all.construct(it.base(), *(it - 1));
 
-					*position = val;
+					_all.construct(position.base(), val);
 
 					_size++;
 
@@ -482,39 +506,25 @@ namespace ft
 			void						insert( iterator position,
 				size_type n, const value_type &val )
 			{
-				if (position != end() - 1)
+				if (position != end())
 				{
 					size_type pos = position - begin();
-
-					// std::cout << "before: ";
-					// for (iterator it = begin(); it != end(); ++it)
-					// 	std::cout << *it << ' ';
-					// std::cout << std::endl;
 
 					reserve(_size + n);
 
 					position = begin() + pos;
 
-					// std::cout << "after: ";
-					// for (iterator it = begin(); it != end() + n; ++it)
-					// 	std::cout << *it << ' ';
-					// std::cout << std::endl;
+					// std::cout << "position:" << *position << std::endl;
 
-					// std::cout 	<< "position: " << *position << std::endl
-					// 			<< "position + n: " << *(position + n) << std::endl;
+					iterator it = end() + (n - 1);
 
-					iterator it = end() + n;
-
-					for (; it != (position + (n - 1)); --it)
-						*it = *(it - n);
-					// for (it = begin(); it != end(); ++it)
-					// 	std::cout << *it << ' ';
-					// std::cout << std::endl;
+					for (; it - n != begin() - 1; --it)
+						_all.construct(it.base(), *(it - n)); 
 					
 					it = position;
 
-					for (; it != (position + n); ++it)
-						*it = val;
+					for (; it != position + n; ++it)
+						_all.construct(it.base(), val);
 
 					_size += n;
 				}
@@ -529,10 +539,7 @@ namespace ft
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value, int>::type = 0 )
 			{
 
-				size_type n = 0;
-
-				for (InputIterator it = first; it != last; it++)
-					n++;
+				size_type n = last - first;
 
 				if (position != end())
 				{
@@ -542,15 +549,15 @@ namespace ft
 
 					position = begin() + pos;
 
-					iterator it = end() + n;
+					iterator it = end() + (n - 1);
 
-					for (; it != (position + (n - 1)); --it)
-						*it = *(it - n);
+					for (; it - n != begin() - 1; --it)
+						_all.construct(it.base(), *(it - n)); 
 					
 					it = position;
 
 					for (; it != position + n; ++it)
-						*it = *(first++);
+						_all.construct(it.base(), *(first++));
 
 					_size += n;
 				}
@@ -567,17 +574,20 @@ namespace ft
 				size_type	pos = position - begin();
 
 				_all.destroy(position.base());
-				for (iterator it = position; it != end(); ++it)
-					*it = *(it + 1);
 
 				_size--;
+
+				for (iterator it = position; it != end(); ++it)
+					*it = *(it + 1);
 
 				return (begin() + pos);
 			}
 
 			iterator				erase( iterator first, iterator last )
 			{
-				size_type	pos = last - first;
+				size_type	pos = first - begin();
+
+				size_type	n = last - first;
 
 				_size -= (last - first);
 
@@ -585,7 +595,7 @@ namespace ft
 					_all.destroy(it.base());
 
 				for (iterator it = first; it != end(); ++it)
-					*it = *(it + pos);
+					*it = *(it + n);
 
 				return (begin() + pos);
 			}
@@ -610,7 +620,6 @@ namespace ft
 			{
 				for (iterator it = begin(); it != end(); ++it)
 					_all.destroy(it.base());
-				// _all.deallocate(_array, _capacity);
 
 				_size = 0;
 			}
@@ -680,7 +689,7 @@ namespace ft
 	bool operator==( const vector<T,Alloc> &lhs, const vector<T,Alloc> &rhs )
 	{
 		if (lhs.size() == rhs.size())
-			return (equal(lhs.begin(), lhs.end(), rhs.begin()));
+			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 		
 		return (false);
 	}
@@ -694,7 +703,7 @@ namespace ft
 	template <class T, class Alloc>
 	bool operator<( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs )
 	{
-		return (lexicographical_compare(lhs.begin(), lhs.end(),
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
 			rhs.begin(), rhs.end()));
 	}
 
