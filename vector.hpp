@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 12:03:22 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/21 13:23:27 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/21 17:44:54 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 #include <iostream>
 #include <memory>
-// #include <vector>
-// #include <list>
+#include <vector>
+#include <list>
 #include <stdexcept>
-// #include <type_traits>
+#include <type_traits>
 
 #include "vector/vector_iterator.hpp"
 #include "vector/vector_reverse_iterator.hpp"
@@ -26,7 +26,14 @@
 
 namespace ft
 {
-	template < class T, class Alloc = std::allocator<T> >
+	/*	Vector class template
+		Vectors are sequence containers representing arrays that can
+		change in size.
+	*/
+
+	template <	class T,								// vector::value_type
+				class Alloc = std::allocator<T>			// vector::allocator_type
+			>
 	class vector
 	{
 		public:
@@ -48,12 +55,14 @@ namespace ft
 
 		private:
 
-			/*							VARIABLES								*/
+			/*							MEMBER VARIABLES						*/
 
-			T											*_array;
-			size_type									_size;
-			size_type									_capacity;
-			allocator_type								_all;
+			T													*_array;
+			size_type											_size;
+			size_type											_capacity;
+			allocator_type										_all;
+
+			/*							UTILITIES								*/
 
 			size_type					compute_capacity( void )
 			{
@@ -89,9 +98,6 @@ namespace ft
 
 			void						destroy_array( void )
 			{
-			// 	std::cout	<< "Destroy _array" << std::endl
-			// 				<< "_size: " << _size << std::endl
-			// 				<< "_capacity: " << _capacity << std::endl;
 
 				if (_array)
 				{
@@ -101,7 +107,7 @@ namespace ft
 						_all.destroy(it.base());
 					_all.deallocate(_array, _capacity);
 
-					_array = NULL;
+					_array = nullptr;
 				}
 			}
 
@@ -114,12 +120,12 @@ namespace ft
 			/* First (Default constructor)
 				Empty container, no elements									*/
 			vector( const allocator_type& alloc = allocator_type() ) :
-				_array(NULL), _size(0), _capacity(0), _all(alloc)
+				_array(nullptr), _size(0), _capacity(0), _all(alloc)
 			{
 				// std::cout << "First constructor" << std::endl;
 			}
 
-			/* Second
+			/* Second (Fill constructor)
 				Constructs a container with n elements. Each element is a
 				copy of val.													*/	
 			vector( size_type n, const value_type& val = value_type(),
@@ -135,7 +141,7 @@ namespace ft
 
 			}
 			
-			/* Third
+			/* Third (Range constructor)
 				Constructs a container with as many elements as the range
 				[first,last), with each element constructed from its
 				corresponding element in that range, in the same order.			*/
@@ -154,7 +160,7 @@ namespace ft
 
 			}
 			
-			/* Fourth
+			/* Fourth (Copy constructor)
 				Constructs a container with a copy of each of the elements
 				in x, in the same order.										*/
 			vector( const vector &src ) : _size(src._size),
@@ -500,8 +506,6 @@ namespace ft
 				
 				return ( end() - 1 );
 			}
-
-			/*	Have to use enable_if + is_integer to make compilator to choose second overload */
 
 			void						insert( iterator position,
 				size_type n, const value_type &val )

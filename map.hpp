@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 04:04:46 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/18 19:21:10 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/21 19:06:02 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,25 @@
 
 namespace ft
 {
-	template < typename T >
+	template < class Key, class T >
 	struct s_tree
 	{
-		T data;
-		struct s_tree *left;
-		struct s_tree *right;	
+		ft::pair<const Key, T>	data;
+		struct s_tree			*left;
+		struct s_tree			*right;
 	};
 
 	template <	class Key,												// map::key_type
 				class T,												// map::mapped_type
 				class Compare = std::less<Key>,							// map::key_compare
-				class Alloc = std::allocator<ft::pair<const Key,T>>		// map::allocator_type
+				class Alloc = std::allocator<ft::pair<const Key,T> >	// map::allocator_type
 			>
 	class map
 	{
+		private:
+
+			typedef typename ft::s_tree<T>						tree_node;		
+
 		public:
 
 			/*							MEMBER TYPES							*/
@@ -59,9 +63,29 @@ namespace ft
 
 		private:
 
-			/*							VARIABLES								*/
+			/*							MEMBER VARIABLES						*/
 
-			
+			tree_node											*_root;
+			size_type											_size;
+			size_type											_capacity;
+			key_compare											_comp;
+			allocator_type										_all;
+
+			/*							TREE UTILITIES							*/
+
+			tree_node					*newNode( value_type data )
+			{
+				tree_node		*n;
+
+				n = _all.allocate(1);
+
+				_all.construct(&(n->data), data);
+
+				n->left = nullptr;
+				n->right = nullptr;
+
+				return (n);
+			}
 		
 		public:
 
@@ -69,6 +93,32 @@ namespace ft
 
 			/*							CONSTRUCTORS							*/
 
+			/*	First (Default constructor)
+				Empty container, no elements.									*/
+			explicit map (const key_compare& comp = key_compare(),
+				const allocator_type& alloc = allocator_type()) :
+				_root(nullptr), _size(0), _capacity(0), __comp(comp), _all(alloc)
+			{
+			}
+
+			/*	Second (Range constructor)
+				Constructs a container with as many elements as the range
+				[first,last), with each element constructed from its
+				corresponding element in that range.							*/
+			template <class InputIterator>
+			map (InputIterator first, InputIterator last,
+				const key_compare& comp = key_compare(),
+				const allocator_type& alloc = allocator_type()) :
+				_size(last - first), _capacity(compute)
+			{
+			}
+
+			/*	Third (Copy constructor)
+				Constructs a container with a copy of each of the elements
+				in x.															*/
+			map (const map& x)
+			{
+			}
 	};
 }
 
