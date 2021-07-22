@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 20:40:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/20 14:50:36 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/22 19:27:01 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,22 +64,22 @@ namespace ft
 		any of the functionality an iterator is expected to have.
 	*/
 
-	// template <	class Category,
-	// 			class T,
-	// 			class Distance = ptrdiff_t,
-	// 			class Pointer = T*,
-	// 			class Reference = T& >
-	// struct iterator_base
-	// {
-	// 	/*							MEMBER TYPES							*/
+	template <	class Category,
+				class T,
+				class Distance = ptrdiff_t,
+				class Pointer = T*,
+				class Reference = T& >
+	struct iterator_base
+	{
+		/*							MEMBER TYPES							*/
 
-	// 	typedef T									value_type;
-	// 	typedef Distance							difference_type;
-	// 	typedef Pointer								pointer;
-	// 	typedef Reference							reference;
-	// 	typedef Category							iterator_category;
+		typedef T									value_type;
+		typedef Distance							difference_type;
+		typedef Pointer								pointer;
+		typedef Reference							reference;
+		typedef Category							iterator_category;
 	
-	// };
+	};
 
 	/*				-|-|-|-|- RELATIONAL OPERATORS -|-|-|-|-				*/
 

@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/16 16:29:25 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/20 15:48:10 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/22 19:13:59 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ namespace ft {
 
 			reverse_iterator			&operator=( const reverse_iterator &rhs )
 			{
-				_p = rhs.base();
+				if (this != &rhs)
+					_p = rhs.base();
 
 				return (*this);
 			}

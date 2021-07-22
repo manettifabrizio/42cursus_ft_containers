@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 18:28:25 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/19 11:23:05 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/22 19:10:43 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,13 @@ namespace ft
 
 		pair	&operator=( const pair &pr )
 		{
-			first = pr.first;
-			second = pr.second;
+			if (this != &pr)
+			{
+				first = pr.first;
+				second = pr.second;
+			}
+
+			return (*this);
 		}
 	}
 

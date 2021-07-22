@@ -6,14 +6,13 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 12:03:22 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/21 17:44:54 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/22 19:09:25 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-#include <iostream>
 #include <memory>
 #include <vector>
 #include <list>
@@ -119,7 +118,7 @@ namespace ft
 
 			/* First (Default constructor)
 				Empty container, no elements									*/
-			vector( const allocator_type& alloc = allocator_type() ) :
+			explicit vector( const allocator_type& alloc = allocator_type() ) :
 				_array(nullptr), _size(0), _capacity(0), _all(alloc)
 			{
 				// std::cout << "First constructor" << std::endl;
@@ -128,7 +127,7 @@ namespace ft
 			/* Second (Fill constructor)
 				Constructs a container with n elements. Each element is a
 				copy of val.													*/	
-			vector( size_type n, const value_type& val = value_type(),
+			explicit vector( size_type n, const value_type& val = value_type(),
 				const allocator_type& alloc = allocator_type() ) : _size(n),
 				_capacity(compute_capacity()), _all(alloc)
 			{
@@ -189,16 +188,19 @@ namespace ft
 				Copies all the elements from x into the container.				*/
 			vector				&operator=( const vector &x )
 			{
-				destroy_array();
+				if (this != &x)
+				{
+					destroy_array();
 
-				_size = x._size;
+					_size = x._size;
 
-				_capacity = x._capacity;
+					_capacity = x._capacity;
 
-				_array = _all.allocate(_capacity);
+					_array = _all.allocate(_capacity);
 
-				for (size_type i = 0; i < _size; i++)
-					_all.construct(&(_array[i]), x._array[i]);
+					for (size_type i = 0; i < _size; i++)
+						_all.construct(&(_array[i]), x._array[i]);
+				}
 				
 				return ( *this );
 			}
@@ -321,11 +323,8 @@ namespace ft
 			/*	empty()
 				Returns whether the vector is empty.							*/
 			bool						empty( void ) const
-			{
-				if (_size == 0)
-					return ( true );
-				
-				return ( false );
+			{	
+				return ( _size == 0 );
 			}
 
 			void						reserve( size_type n )
