@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/22 17:55:24 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/23 16:49:12 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ namespace ft {
 			// prefix 
 			iterator					&operator++( void )
 			{
-				++_p;
 
 				return (*this);
 			}
@@ -94,7 +93,7 @@ namespace ft {
 
 		protected:
 	
-			pointer				_p;
+			value_type					*n;
 	
 	};
 

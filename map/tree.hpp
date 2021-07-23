@@ -6,21 +6,22 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/22 19:21:41 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/23 17:05:29 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TREE_HPP
 # define TREE_HPP
 
-#include "map/map_iterator.hpp"
+#include "map_iterator.hpp"
+#include "utility.hpp"
 
 /*	Struct of one tree node														*/
 struct				s_tree
 {
 	int				data;
 	s_tree			*left;
-	s_tree			*right;	
+	s_tree			*right;
 };
 
 /*	Binary Search Tree class template
@@ -36,7 +37,7 @@ class tree
 {
 	public:
 
-		/*							MEMBER TYPES							*/
+		/*							MEMBER TYPES								*/
 
 		typedef T											value_type;
 		typedef Compare										value_compare;
@@ -50,21 +51,48 @@ class tree
 
 	private:
 
-		/*							MEMBER VARIABLES						*/
+		/*							MEMBER VARIABLES							*/
 
 		s_tree												*_root;
 		size_t												_size;
 		size_t												_heigth;
 		allocator_type										_all;
 
+		/*							TREE UTILITIES								*/
+
+			tree_node					*newNode( value_type data )
+			{
+				tree_node		*n;
+
+				n = _all.allocate(1);
+
+				_all.construct(&(n->data), data);
+
+				n->left = nullptr;
+				n->right = nullptr;
+
+				return (n);
+			}
+
+			bool						check_key( const value_type &val )
+			{
+					if (node.left != nullptr)
+						visitNode(node.left);
+					if (node.right != nullptr)
+						visitNode(node.right);
+					if (node.left == nullptr && node.right == nullptr)
+					
+			}
+		
+
 	public:
 
-		/*		-*-*-*-*-*-*-*-  MEMBER FUNCTIONS -*-*-*-*-*-*-*-			*/
+		/*		-*-*-*-*-*-*-*-  MEMBER FUNCTIONS -*-*-*-*-*-*-*-				*/
 
-		/*							CONSTRUCTORS							*/
+		/*							CONSTRUCTORS								*/
 
 		/*	First (Default constructor)
-			Empty tree, root is NULL.										*/
+			Empty tree, root is NULL.											*/
 		tree( const allocator_type& alloc = allocator_type() ) :
 			_root(nullptr), _size(0), _heigth(0), _all(alloc)
 		{
@@ -72,12 +100,12 @@ class tree
 
 		/*	Third (Copy constructor)
 			Constructs a container with a copy of each of the elements
-			in x.															*/
+			in x.																*/
 		tree( const tree &x )
 		{
 		}
 		
-		/*							DESTRUCTOR								*/
+		/*							DESTRUCTOR									*/
 		
 		~tree( void )
 		{
@@ -85,7 +113,7 @@ class tree
 			printf("");
 		}
 
-		/*						OPERATOR OVERLOAD							*/
+		/*						OPERATOR OVERLOAD								*/
 
 		tree							&operator=( const map &x )
 		{
@@ -94,11 +122,11 @@ class tree
 
 		value_type						
 
-		/*					-|-|-|-|-  ITERATORS -|-|-|-|-					*/
+		/*					-|-|-|-|-  ITERATORS -|-|-|-|-						*/
 
 		/*	begin()
 			Returns an iterator referring to the first element
-			in the tree.													*/
+			in the tree.														*/
 		iterator			begin( void )
 		{
 			return ( iterator(_root) );
@@ -106,42 +134,61 @@ class tree
 
 		// const_iterator		begin();
 
-		/*					-|-|-|-|-  CAPACITY -|-|-|-|-					*/
+		/*					-|-|-|-|-  CAPACITY -|-|-|-|-						*/
 
 		/*	empty()
-			Test whether the tree is empty.									*/
+			Test whether the tree is empty.										*/
 		bool				empty( void ) const
 		{
 			return ( _size == 0 );
 		}
 
 		/*	size()
-			Return the number of nodes in the tree.							*/
+			Return the number of nodes in the tree.								*/
 		size_type			size( void ) const
 		{
 			return ( _size );
 		}
 
 		/*	max_size()
-			Returns the maximum number of elements that the tree can hold.	*/
+			Returns the maximum number of elements that the tree can hold.		*/
 		size_type			max_size( void ) const
 		{
 			return ( _all.max_size() );
 		}
 
-		/*					-|-|-|-|-  MODIFIERS -|-|-|-|-					*/
+		/*					-|-|-|-|-  MODIFIERS -|-|-|-|-						*/
 
-		pair<iterator,bool> insert (const value_type& val);
+		ft::pair<iterator,bool>				insert ( const value_type &val )
+		{
+			s_tree		*n = _root;
+
+			check_key(val.first);
+
+			while (1)
+				if (!n)
+				{
+					n = newNode(data);
+					break ;
+				}
+				else if (value_compare(val, n->data))
+					n = n->left;
+				else
+					n = n->right;
+			
+			return (n);
+		}
+
 		iterator insert (iterator position, const value_type& val);
 		template <class InputIterator>
   		void insert (InputIterator first, InputIterator last);
 
-		/*					-|-|-|-|-  OBSERVERS -|-|-|-|-					*/
+		/*					-|-|-|-|-  OBSERVERS -|-|-|-|-						*/
 
 		key_compare key_comp() const;
 		value_compare value_comp() const;
 
-		/*					-|-|-|-|-  OPERATIONS -|-|-|-|-					*/
+		/*					-|-|-|-|-  OPERATIONS -|-|-|-|-						*/
 
 		iterator find (const key_type& k);
 		const_iterator find (const key_type& k) const;

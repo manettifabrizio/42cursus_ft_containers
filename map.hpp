@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 04:04:46 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/22 16:27:09 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/23 16:35:35 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ namespace ft
 	{
 		private:
 
-			typedef typename ft::s_tree<T>						tree_node;		
+			typedef typename ft::s_tree<T>						tree_node;
 
 		public:
 
@@ -71,22 +71,7 @@ namespace ft
 			key_compare											_comp;
 			allocator_type										_all;
 
-			/*							TREE UTILITIES							*/
-
-			tree_node					*newNode( value_type data )
-			{
-				tree_node		*n;
-
-				n = _all.allocate(1);
-
-				_all.construct(&(n->data), data);
-
-				n->left = nullptr;
-				n->right = nullptr;
-
-				return (n);
-			}
-		
+			
 		public:
 
 			/*		-*-*-*-*-*-*-*-  MEMBER FUNCTIONS -*-*-*-*-*-*-*-			*/
@@ -119,6 +104,30 @@ namespace ft
 			map (const map& x)
 			{
 			}
+
+			/*					-|-|-|-|-  OBSERVERS -|-|-|-|-					*/
+
+			/*	Nested function class value_compare()
+				Returns a comparison object that can be used to compare two
+				elements to get whether the key of the first one goes
+				before the second.												*/
+			template <class Key, class T, class Compare, class Alloc>
+			class map<Key,T,Compare,Alloc>::value_compare
+			{
+				protected:
+
+					typedef Compare comp;
+					value_compare (Compare c) : comp(c)
+					{
+					}
+				
+				public:
+				
+					bool operator() (const value_type& x, const value_type& y) const
+					{
+						return (comp(x.first, y.first));
+					}
+			};
 	};
 }
 
