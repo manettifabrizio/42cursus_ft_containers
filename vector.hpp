@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 12:03:22 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/22 19:09:25 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/30 15:43:04 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <type_traits>
 
 #include "vector/vector_iterator.hpp"
-#include "vector/vector_reverse_iterator.hpp"
+#include "reverse_iterator.hpp"
 #include "vector/type_traits.hpp"
 
 namespace ft
@@ -178,7 +178,6 @@ namespace ft
 				storage capacity allocated by the vector using its allocator.	*/
 			~vector( void )
 			{
-				// std::cout << "Destructor" << std::endl;
 				destroy_array();
 			}
 
@@ -222,7 +221,7 @@ namespace ft
 
 			/*					-|-|-|-|-  ITERATORS -|-|-|-|-					*/
 
-			/* begin()
+			/*	begin()
 				Returns an iterator pointing to the first element in the
 				vector.															*/
 			iterator					begin( void )
@@ -235,7 +234,7 @@ namespace ft
 				return ( const_iterator(&(_array[0])) );
 			}
 
-			/* rbegin()
+			/*	rbegin()
 				Returns a reverse iterator pointing to the last element in the
 				vector.															*/
 			reverse_iterator 			rbegin( void )
@@ -245,10 +244,10 @@ namespace ft
 
 			const_reverse_iterator 		rbegin( void ) const
 			{
-				return ( reverse_iterator(end()) );
+				return ( const_reverse_iterator(end()) );
 			}
 
-			/* end()
+			/*	end()
 				Returns an iterator referring to the past-the-end element
 				in the vector container. If the container is empty, this
 				function returns the same as vector::begin.						*/	
@@ -268,7 +267,7 @@ namespace ft
 				return ( const_iterator(&(_array[0])) );
 			}							
 
-			/* rend()
+			/*	rend()
 				Returns a reverse iterator pointing to the theoretical element
 				preceding the first element in the vector.						*/	
 			reverse_iterator			rend( void )
@@ -278,7 +277,7 @@ namespace ft
 
 			const_reverse_iterator		rend( void ) const
 			{
-				return ( reverse_iterator(begin()) );
+				return ( const_reverse_iterator(begin()) );
 			}
 
 			/*					-|-|-|-|-  CAPACITY -|-|-|-|-					*/

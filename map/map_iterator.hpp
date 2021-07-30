@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/23 16:49:12 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/28 16:58:37 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,69 +23,127 @@ namespace ft {
 		and towards the beginning).
 	*/
 
-	template < typename T >
-	class iterator : public ft::iterator_base<std::bidirectional_iterator_tag,T>
+	template <	class T,
+				class Node,
+				class Category = std::bidirectional_iterator_tag,
+				class Distance = ptrdiff_t,
+				class Pointer = T*,
+				class Reference = T& >
+	class map_iterator
 	{
+
+		typedef T											value_type;
+		typedef Node*	                                    node_pointer;
+		typedef Distance									difference_type;
+		typedef Pointer										pointer;
+		typedef Reference									reference;
+		typedef Category									iterator_category;
 
 		public:
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
-			iterator( void ) : _p(nullptr) { }
+			map_iterator( void ) : node(nullptr) { }
 
-			iterator( T it ) : _p(it) { }
+			map_iterator( node_pointer it ) : node(it) { }
 
-			iterator( const iterator &src )
+			map_iterator( const map_iterator &src )
 			{
-				_p = src._p;
+				node = src.node;
 			}
 
-			~iterator( void ) { }
+			~map_iterator( void ) { }
+
+			node_pointer				base( void ) const
+			{
+				return (node);
+			}
 
 			/*						OPERATORS OVERLOAD							*/
 
 			/* Dereference														*/
 
-			reference					operator*( void ) const
+			node_pointer				operator*( void ) const
 			{
-				return (*_p);
+				return (node);
 			}
 
-			iterator_type				operator->( void ) const
+			pointer						operator->( void ) const
 			{
-				return (_p);
+				return (&(node->data));
 			}
 
 			/* Increment/Decrement												*/
 			
 			// prefix 
-			iterator					&operator++( void )
+			map_iterator				&operator++( void )
 			{
+				//	Down to the right and left as possible
+				if (node->right != nullptr)
+					{
+						node = node->right;
+
+						while (node->left != nullptr)
+							node = node->left;
+					}
+				// Move up the tree until we have moved over a
+				// left child link
+				else
+				{
+					node_pointer p = node->parent;
+					while (p != nullptr && node == p->right)
+					{
+						node = p;
+						p = p->parent;
+					}
+
+					node = p;
+				}
 
 				return (*this);
 			}
 		
 			// postfix
-			iterator					operator++( int )
+			map_iterator				operator++( int )
 			{
-				iterator old = *this;
+				map_iterator old = *this;
 				operator++();
 				
 				return (old);
 			}
 		
 			// prefix
-			iterator					&operator--( void )
+			map_iterator				&operator--( void )
 			{
-				--_p;
+				//	One to the left and downode to right as possible
+				if (node->left != nullptr)
+				{
+					node = node->left;
+
+					while (node->right != nullptr)
+						node = node->right;
+				}
+				// Move up the tree until we have moved over a
+				// right child link
+				else
+				{
+					node_pointer	p = node->parent;
+					while (p != nullptr && node == p->left)
+					{
+						node = p;
+						p = p->parent;
+					}
+
+					node = p;
+				}
 
 				return (*this);
 			}
 		
 			// postfix
-			iterator					operator--( int )
+			map_iterator				operator--( int )
 			{
-				iterator old = *this;
+				map_iterator old = *this;
 				operator--();
 				
 				return (old);
@@ -93,7 +151,145 @@ namespace ft {
 
 		protected:
 	
-			value_type					*n;
+			node_pointer					node;
+	
+	};
+
+	/*	Bidirectional Iterator const class template
+		Bidirectional iterators are iterators that can be used to access the
+		sequence of elements in a range in both directions (towards the end
+		and towards the beginning).
+	*/
+
+	template <	class T,
+				class Node,
+				class Category = std::bidirectional_iterator_tag,
+				class Distance = ptrdiff_t,
+				class Pointer = T*,
+				class Reference = T& >
+	class const_map_iterator : public map_iterator<T, Node>
+	{
+
+		typedef T											value_type;
+		typedef Node*	                                    node_pointer;
+		typedef Distance									difference_type;
+		typedef const Pointer								pointer;
+		typedef const Reference								reference;
+		typedef Category									iterator_category;
+
+		public:
+
+			/*					CONSTRUCTORS AND DESTRUCTOR						*/
+
+			const_map_iterator( void ) : node(nullptr) { }
+
+			const_map_iterator( node_pointer it ) : node(it) { }
+
+			const_map_iterator( const const_map_iterator &src )
+			{
+				node = src.node;
+			}
+
+			~const_map_iterator( void ) { }
+
+			node_pointer				base( void ) const
+			{
+				return (node);
+			}
+
+			/*						OPERATORS OVERLOAD							*/
+
+			/* Dereference														*/
+
+			Node						&operator*( void ) const
+			{
+				return (*node);
+			}
+
+			pointer						operator->( void ) const
+			{
+				return (&(node->data));
+			}
+
+			/* Increment/Decrement												*/
+			
+			// prefix 
+			const_map_iterator				&operator++( void )
+			{
+				//	Down to the right and left as possible
+				if (node->right != nullptr)
+					{
+						node = node->right;
+
+						while (node->left != nullptr)
+							node = node->left;
+					}
+				// Move up the tree until we have moved over a
+				// left child link
+				else
+				{
+					node_pointer p = node->parent;
+					while (p != nullptr && node == p->right)
+					{
+						node = p;
+						p = p->parent;
+					}
+
+					node = p;
+				}
+
+				return (*this);
+			}
+		
+			// postfix
+			const_map_iterator				operator++( int )
+			{
+				const_map_iterator old = *this;
+				operator++();
+				
+				return (old);
+			}
+		
+			// prefix
+			const_map_iterator				&operator--( void )
+			{
+				//	One to the left and downode to right as possible
+				if (node->left != nullptr)
+				{
+					node = node->left;
+
+					while (node->right != nullptr)
+						node = node->right;
+				}
+				// Move up the tree until we have moved over a
+				// right child link
+				else
+				{
+					node_pointer p = node->parent;
+					while (p != nullptr && node == p->left)
+					{
+						node = p;
+						p = p->parent;
+					}
+
+					node = p;
+				}
+
+				return (*this);
+			}
+		
+			// postfix
+			const_map_iterator			operator--( int )
+			{
+				const_map_iterator old = *this;
+				operator--();
+				
+				return (old);
+			}
+
+		protected:
+	
+			node_pointer				node;
 	
 	};
 

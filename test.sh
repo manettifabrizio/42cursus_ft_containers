@@ -91,7 +91,7 @@ test () {
 ## Clean files
 #./test.sh -c
 
-mkdir $EXEC_FOLDER $LOG_FOLDER $DIFF_FOLDER
+mkdir $EXEC_FOLDER $LOG_FOLDER $DIFF_FOLDER &> /dev/null
 
 if [ $1 = "-o" ]; then
 	container=$2

@@ -1,38 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rbegin.cpp                                         :+:      :+:    :+:   */
+/*   empty.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/17 23:50:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:07:12 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/27 23:53:34 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../general.hpp"
 
-#include <iostream>
-#include <vector>
-
 int main ()
 {
-	int		a[] = {0, 1, 2, 3, 4};
+	TESTED_NAMESPACE::map<char,int> mymap;
 
-	TESTED_NAMESPACE::vector<int> myvector (a, a + 5);  // 5 default-constructed ints
+	mymap['a']=10;
+	mymap['b']=20;
+	mymap['c']=30;
 
-	int i = 0;
+	display_m(mymap, "mymap");
 
-	TESTED_NAMESPACE::vector<int>::reverse_iterator rit = myvector.rbegin();
+	while (!mymap.empty())
+	{
+	std::cout << mymap.begin()->first << " => " << mymap.begin()->second << '\n';
+	mymap.erase(mymap.begin());
+	}
 
-	std::cout << "rbegin: " << *rit << std::endl;
-
-	display(myvector, "myvector");
-
-	for (; rit != myvector.rend(); ++rit)
-		*rit = ++i;
-
-	display(myvector, "myvector");
+	display_m(mymap, "mymap");
 
 	return 0;
 }

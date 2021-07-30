@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   general.hpp                                        :+:      :+:    :+:   */
+/*   ../../general.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/17 22:16:03 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/20 18:23:23 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/28 01:06:15 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 
-#include "vector.hpp"
+#include "../vector.hpp"
+#include "../map.hpp"
 
 # ifndef TESTED_NAMESPACE
 # define TESTED_NAMESPACE ft
@@ -62,6 +64,16 @@ void			display( T x , std::string name )
 	for (typename T::iterator it = x.begin(); it != x.end(); ++it)
 		std::cout << *it << ' ';
 	std::cout << std::endl;
+}
+
+template < class T >
+void			display_m( T m, std::string s )
+{
+	std::cout << s << std::endl;
+
+	for (typename T::iterator it = m.begin(); it != m.end(); ++it)
+		std::cout << it->first << ' ' << it->second
+					<< std::endl;
 }
 
 #endif

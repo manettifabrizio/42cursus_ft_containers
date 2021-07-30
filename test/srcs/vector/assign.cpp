@@ -6,11 +6,11 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 00:09:13 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/20 21:19:47 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/28 01:07:12 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "general.hpp"
+#include "../../general.hpp"
 
 void		_int()
 {

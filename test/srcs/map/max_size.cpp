@@ -1,38 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rbegin.cpp                                         :+:      :+:    :+:   */
+/*   max_size.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/17 23:50:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:07:12 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/27 23:53:55 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../general.hpp"
 
-#include <iostream>
-#include <vector>
-
 int main ()
 {
-	int		a[] = {0, 1, 2, 3, 4};
+  int i;
+  TESTED_NAMESPACE::map<int,int> mymap;
 
-	TESTED_NAMESPACE::vector<int> myvector (a, a + 5);  // 5 default-constructed ints
+  if (mymap.max_size()>1000)
+  {
+    for (i=0; i<1000; i++) mymap[i]=0;
+    std::cout << "The map contains 1000 elements.\n";
+  }
+  else std::cout << "The map could not hold 1000 elements.\n";
 
-	int i = 0;
-
-	TESTED_NAMESPACE::vector<int>::reverse_iterator rit = myvector.rbegin();
-
-	std::cout << "rbegin: " << *rit << std::endl;
-
-	display(myvector, "myvector");
-
-	for (; rit != myvector.rend(); ++rit)
-		*rit = ++i;
-
-	display(myvector, "myvector");
-
-	return 0;
+  return 0;
 }

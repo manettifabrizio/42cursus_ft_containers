@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 20:40:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/22 19:27:01 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/26 17:31:34 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,30 +55,6 @@ namespace ft
 		typedef const T*								pointer;
 		typedef const T&								reference;
 		typedef std::random_access_iterator_tag			iterator_category;
-	};
-
-
-	/*	Iterator base class template
-		This is a base class template that can be used to derive iterator
-		classes from it. It is not an iterator class and does not provide
-		any of the functionality an iterator is expected to have.
-	*/
-
-	template <	class Category,
-				class T,
-				class Distance = ptrdiff_t,
-				class Pointer = T*,
-				class Reference = T& >
-	struct iterator_base
-	{
-		/*							MEMBER TYPES							*/
-
-		typedef T									value_type;
-		typedef Distance							difference_type;
-		typedef Pointer								pointer;
-		typedef Reference							reference;
-		typedef Category							iterator_category;
-	
 	};
 
 	/*				-|-|-|-|- RELATIONAL OPERATORS -|-|-|-|-				*/

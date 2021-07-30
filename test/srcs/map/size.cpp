@@ -1,38 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rbegin.cpp                                         :+:      :+:    :+:   */
+/*   size.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/17 23:50:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:07:12 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/27 23:54:20 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../general.hpp"
 
-#include <iostream>
-#include <vector>
-
 int main ()
 {
-	int		a[] = {0, 1, 2, 3, 4};
+	TESTED_NAMESPACE::map<char,int> mymap;
+	mymap['a']=101;
+	mymap['b']=202;
+	mymap['c']=302;
 
-	TESTED_NAMESPACE::vector<int> myvector (a, a + 5);  // 5 default-constructed ints
+	display_m(mymap, "mymap");
 
-	int i = 0;
-
-	TESTED_NAMESPACE::vector<int>::reverse_iterator rit = myvector.rbegin();
-
-	std::cout << "rbegin: " << *rit << std::endl;
-
-	display(myvector, "myvector");
-
-	for (; rit != myvector.rend(); ++rit)
-		*rit = ++i;
-
-	display(myvector, "myvector");
+	std::cout << "mymap.size() is " << mymap.size() << '\n';
 
 	return 0;
 }

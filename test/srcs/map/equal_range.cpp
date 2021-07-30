@@ -1,33 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   size.cpp                                           :+:      :+:    :+:   */
+/*   equal_range.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/17 23:51:32 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:07:12 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/27 23:53:42 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../general.hpp"
 
-#include <iostream>
-#include <vector>
-
 int main ()
 {
-  TESTED_NAMESPACE::vector<int> myints;
-  std::cout << "0. size: " << myints.size() << '\n';
+  TESTED_NAMESPACE::map<char,int> mymap;
 
-  for (int i=0; i<10; i++) myints.push_back(i);
-  std::cout << "1. size: " << myints.size() << '\n';
+  mymap['a']=10;
+  mymap['b']=20;
+  mymap['c']=30;
 
-  myints.insert (myints.end(),10,100);
-  std::cout << "2. size: " << myints.size() << '\n';
+  std::pair<TESTED_NAMESPACE::map<char,int>::iterator,TESTED_NAMESPACE::map<char,int>::iterator> ret;
+  ret = mymap.equal_range('b');
 
-  myints.pop_back();
-  std::cout << "3. size: " << myints.size() << '\n';
+  std::cout << "lower bound points to: ";
+  std::cout << ret.first->first << " => " << ret.first->second << '\n';
+
+  std::cout << "upper bound points to: ";
+  std::cout << ret.second->first << " => " << ret.second->second << '\n';
 
   return 0;
 }

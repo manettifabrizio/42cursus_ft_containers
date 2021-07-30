@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 18:28:25 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/23 14:33:56 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/28 17:58:08 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 namespace ft
 {
+
 	/*	Pair class template
 		This class couples together a pair of values, which may be of
 		different types (T1 and T2). The individual values can be accessed
@@ -38,7 +39,7 @@ namespace ft
 
 		/*	first()
 			Constructs a pair object with its elements value-initialized.	*/
-		pair( void )
+		pair( void ) : first(first_type()), second(second_type())
 		{
 		}
 
@@ -56,22 +57,30 @@ namespace ft
 		pair( const first_type &a, const second_type &b )
 		{
 			first = a;
-			second = b;	
+			second = b;
 		}
 
 		/*						OPERATOR OVERLOAD							*/
 
 		pair	&operator=( const pair &pr )
 		{
-			if (this != &pr)
-			{
-				first = pr.first;
-				second = pr.second;
-			}
+			first = pr.first;
+			second = pr.second;
 
 			return (*this);
 		}
 	};
+
+	/*	Make_pair function template
+		Constructs a pair object with its first element set to x and
+		its second element set to y.
+	*/
+
+	template <class T1, class T2>
+  	ft::pair<T1,T2>		make_pair (T1 x, T2 y)
+	{
+    	return ( ft::pair<T1,T2>(x,y) );
+  	}
 
 	/*			-*-*-*-*-*-*-*-  NON-MEMBER FUNCTIONS -*-*-*-*-*-*-*-		*/
 

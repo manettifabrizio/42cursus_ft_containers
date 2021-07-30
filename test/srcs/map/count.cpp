@@ -1,38 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rbegin.cpp                                         :+:      :+:    :+:   */
+/*   count.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/17 23:50:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:07:12 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/27 23:53:31 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../general.hpp"
 
-#include <iostream>
-#include <vector>
-
 int main ()
 {
-	int		a[] = {0, 1, 2, 3, 4};
+	TESTED_NAMESPACE::map<char,int> mymap;
+	char c;
 
-	TESTED_NAMESPACE::vector<int> myvector (a, a + 5);  // 5 default-constructed ints
+	mymap ['a']=101;
+	mymap ['c']=202;
+	mymap ['f']=303;
 
-	int i = 0;
+	display_m(mymap, "mymap");
 
-	TESTED_NAMESPACE::vector<int>::reverse_iterator rit = myvector.rbegin();
-
-	std::cout << "rbegin: " << *rit << std::endl;
-
-	display(myvector, "myvector");
-
-	for (; rit != myvector.rend(); ++rit)
-		*rit = ++i;
-
-	display(myvector, "myvector");
+	for (c='a'; c<'h'; c++)
+	{
+	std::cout << c;
+	if (mymap.count(c)>0)
+		std::cout << " is an element of mymap.\n";
+	else 
+		std::cout << " is not an element of mymap.\n";
+	}
 
 	return 0;
 }

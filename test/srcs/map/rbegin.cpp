@@ -5,34 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/17 23:50:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:07:12 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/27 23:54:05 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../general.hpp"
 
-#include <iostream>
-#include <vector>
-
 int main ()
 {
-	int		a[] = {0, 1, 2, 3, 4};
+  TESTED_NAMESPACE::map<char,int> mymap;
 
-	TESTED_NAMESPACE::vector<int> myvector (a, a + 5);  // 5 default-constructed ints
+  mymap['x'] = 100;
+  mymap['y'] = 200;
+  mymap['z'] = 300;
 
-	int i = 0;
+  // show content:
+  TESTED_NAMESPACE::map<char,int>::reverse_iterator rit;
+  for (rit=mymap.rbegin(); rit!=mymap.rend(); ++rit)
+    std::cout << rit->first << " => " << rit->second << '\n';
 
-	TESTED_NAMESPACE::vector<int>::reverse_iterator rit = myvector.rbegin();
-
-	std::cout << "rbegin: " << *rit << std::endl;
-
-	display(myvector, "myvector");
-
-	for (; rit != myvector.rend(); ++rit)
-		*rit = ++i;
-
-	display(myvector, "myvector");
-
-	return 0;
+  return 0;
 }

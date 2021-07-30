@@ -1,38 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rbegin.cpp                                         :+:      :+:    :+:   */
+/*   member_operators.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/17 23:50:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:07:12 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/27 23:53:59 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../general.hpp"
 
-#include <iostream>
-#include <vector>
-
 int main ()
 {
-	int		a[] = {0, 1, 2, 3, 4};
+	TESTED_NAMESPACE::map<char,int> first;
+	TESTED_NAMESPACE::map<char,int> second;
 
-	TESTED_NAMESPACE::vector<int> myvector (a, a + 5);  // 5 default-constructed ints
+	first['x']=8;
+	first['y']=16;
+	first['z']=32;
 
-	int i = 0;
+	display_m(first, "first");
 
-	TESTED_NAMESPACE::vector<int>::reverse_iterator rit = myvector.rbegin();
+	second=first;                // second now contains 3 ints
 
-	std::cout << "rbegin: " << *rit << std::endl;
+	display_m(second, "second");
 
-	display(myvector, "myvector");
+	first=TESTED_NAMESPACE::map<char,int>();  // and first is now empty
 
-	for (; rit != myvector.rend(); ++rit)
-		*rit = ++i;
+	display_m(first, "first");
 
-	display(myvector, "myvector");
-
+	std::cout << "Size of first: " << first.size() << '\n';
+	std::cout << "Size of second: " << second.size() << '\n';
 	return 0;
 }

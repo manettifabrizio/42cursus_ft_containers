@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector_reverse_iterator.hpp                        :+:      :+:    :+:   */
+/*   reverse_iterator.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/16 16:29:25 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/22 19:13:59 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/07/27 23:02:16 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REV_RAITERATOR_HPP
-# define REV_RAITERATOR_HPP
+#ifndef REVERSE_ITERATOR_HPP
+# define REVERSE_ITERATOR_HPP
 
-#include "vector_iterator.hpp"
+#include "iterator_base.hpp"
 
 namespace ft {
 
