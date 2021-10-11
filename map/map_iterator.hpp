@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/08 16:22:53 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/11 15:13:36 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ namespace ft {
 
 			/* Dereference														*/
 
-			node_pointer				operator*( void ) const
+			reference					operator*( void ) const
 			{
-				return (node);
+				return (node->data);
 			}
 
 			pointer						operator->( void ) const
@@ -201,9 +201,9 @@ namespace ft {
 
 			/* Dereference														*/
 
-			Node						&operator*( void ) const
+			reference					operator*( void ) const
 			{
-				return (*node);
+				return (node->data);
 			}
 
 			pointer						operator->( void ) const

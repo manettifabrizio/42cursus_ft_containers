@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/11 12:29:12 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/11 15:37:13 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,11 @@ namespace ft
 				const_iterator it = find(key);
 
 				if (it != end())
+				{
+					// std::cout << "first: " << (*it).first << std::endl;
+					// std::cout << "second: " << (*it).second << std::endl;
 					return (ft::make_pair<const_iterator,bool>(it, false));
+				}
 
 				return (ft::make_pair<const_iterator,bool>(it, true));
 			}
@@ -309,21 +313,25 @@ namespace ft
 				increasing the container size by the number of elements inserted.	*/
 			ft::pair<iterator,bool>		insert( const value_type &val )
 			{
+				// std::cout << "val:" << val.first << std::endl;
+				
 				if (!_root)
 				{
 					_root = newNode(nullptr, val);
 					return (ft::make_pair<iterator,bool>(iterator(_root), true));
 				}
 
-				// std::cout << "val:" << val.first << std::endl;
-
-				ft::pair<iterator, bool>		p = check_key(val.first);
-
-				std::cout	<< "first:" << *(p.first).data << std::endl;
+				// Da capire perché const_iterator -> iterator non converte e segfaulta
+				ft::pair<const_iterator, bool>		p = check_key(val.first);
 
 				//	Key found
-				if (p.second == false)
+				if (p.second == false) {
+					// std::cout << (*p.first).first << std::endl;
+					// std::cout << "key found" << std::endl;
 					return (p);
+				}
+				// else
+					// std::cout << "key not found" << std::endl;
 
 				node							*n = _root;
 				node							*parent = nullptr;
@@ -369,7 +377,7 @@ namespace ft
 				InputIterator last )
 			{
 				for (;first != last; ++first)
-					insert((*first)->data);
+					insert(*first);
 			}
 
 			/*	erase()

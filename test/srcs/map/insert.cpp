@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 23:53:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/11 12:09:19 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/11 15:34:07 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int main ()
 
 	TESTED_NAMESPACE::pair<TESTED_NAMESPACE::map<char,int>::iterator,bool> ret;
 	ret = mymap.insert ( TESTED_NAMESPACE::pair<const char,int>('z',500) );
-	if (ret.second==false)
+	if (ret.second == false)
 	{
 		std::cout << "element 'z' already existed";
 		std::cout << " with a value of " << ret.second << '\n';
