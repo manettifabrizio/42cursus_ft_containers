@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/30 18:31:54 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/11 12:29:12 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ namespace ft
 				// _sentinel_end = newNode();
 
 				for (first; first != last; ++first)
-					insert(*first);
+					insert((*first)->data);
 			}
 
 			/*	Third (Copy constructor)
@@ -319,6 +319,8 @@ namespace ft
 
 				ft::pair<iterator, bool>		p = check_key(val.first);
 
+				std::cout	<< "first:" << *(p.first).data << std::endl;
+
 				//	Key found
 				if (p.second == false)
 					return (p);
@@ -366,8 +368,8 @@ namespace ft
 			void						insert( InputIterator first,
 				InputIterator last )
 			{
-				for (first; first != last; ++first)
-					insert(*first);
+				for (;first != last; ++first)
+					insert((*first)->data);
 			}
 
 			/*	erase()

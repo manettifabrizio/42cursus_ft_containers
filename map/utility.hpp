@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 18:28:25 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 17:58:08 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/08 15:38:36 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,8 @@ namespace ft
 
 		/*	third()
 			Member first is constructed with a and member second with b.	*/
-		pair( const first_type &a, const second_type &b )
+		pair( const first_type &a, const second_type &b ) : first(a), second(b)
 		{
-			first = a;
-			second = b;
 		}
 
 		/*						OPERATOR OVERLOAD							*/
