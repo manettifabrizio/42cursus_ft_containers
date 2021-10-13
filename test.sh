@@ -97,7 +97,7 @@ if [ $1 = "-o" ]; then
 	container=$2
 	test $3
 elif [ $1 = "-c" ]; then
-	rm -rf $DIFF_FOLDER/*.diff $LOG_FOLDER/*.log $EXEC_FOLDER/*.dSYM
+	rm -rf $DIFF_FOLDER/*.diff $LOG_FOLDER/*.log $EXEC_FOLDER/*.dSYM *.dSYM .vscode a.out
 else
 	containers=(vector map stack)
 	if [ $# -ne 0 ]; then

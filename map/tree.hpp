@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/11 15:37:13 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/13 15:30:09 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,16 +123,23 @@ namespace ft
 			}
 
 			template < typename Key >
+			ft::pair<iterator,bool>	check_key( const Key &key )
+			{
+				iterator it = find(key);
+
+				if (it != end())
+					return (ft::make_pair<iterator,bool>(it, false));
+
+				return (ft::make_pair<iterator,bool>(it, true));
+			}
+
+			template < typename Key >
 			ft::pair<const_iterator,bool>	check_key( const Key &key ) const
 			{
 				const_iterator it = find(key);
 
 				if (it != end())
-				{
-					// std::cout << "first: " << (*it).first << std::endl;
-					// std::cout << "second: " << (*it).second << std::endl;
 					return (ft::make_pair<const_iterator,bool>(it, false));
-				}
 
 				return (ft::make_pair<const_iterator,bool>(it, true));
 			}
@@ -185,9 +192,6 @@ namespace ft
 				const allocator_type& alloc = allocator_type() ) : _root(nullptr),
 				_size(last - first), _comp(comp), _all(alloc)
 			{
-				// _sentinel_begin = newNode();
-
-				// _sentinel_end = newNode();
 
 				for (first; first != last; ++first)
 					insert((*first)->data);
@@ -313,8 +317,8 @@ namespace ft
 				increasing the container size by the number of elements inserted.	*/
 			ft::pair<iterator,bool>		insert( const value_type &val )
 			{
-				// std::cout << "val:" << val.first << std::endl;
 				
+				// Tree root doesn't exist
 				if (!_root)
 				{
 					_root = newNode(nullptr, val);
@@ -322,20 +326,18 @@ namespace ft
 				}
 
 				// Da capire perché const_iterator -> iterator non converte e segfaulta
-				ft::pair<const_iterator, bool>		p = check_key(val.first);
+				ft::pair<iterator, bool>		p = check_key(val.first);
 
 				//	Key found
 				if (p.second == false) {
-					// std::cout << (*p.first).first << std::endl;
-					// std::cout << "key found" << std::endl;
 					return (p);
 				}
-				// else
-					// std::cout << "key not found" << std::endl;
 
+				// Key not found				
 				node							*n = _root;
 				node							*parent = nullptr;
 
+				// Find last leaf using _comp
 				while (n)
 				{
 					parent = n;
@@ -351,13 +353,6 @@ namespace ft
 					parent->left = newnode;
 				else
 					parent->right = newnode;
-
-				// std::cout << "parent:" << parent->data.second << std::endl;
-
-				// if (newnode == leftMostNode())
-				// 	newnode->left = _sentinel_begin;
-				// if (newnode == rightMostNode())
-				// 	newnode->right = _sentinel_end;
 
 				_size++;
 
@@ -535,7 +530,10 @@ namespace ft
 
 				for (it = begin(); it != end(); ++it)
 					if (it->first == k)
+					{
+						// std::cout << "const_find key found: " << it->first << " " << it->second << std::endl;
 						return (it);
+					}
 
 				// std::cout << "const_find" << std::endl;
 

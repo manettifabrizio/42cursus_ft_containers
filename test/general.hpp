@@ -67,9 +67,11 @@ void			display( T x , std::string name )
 }
 
 template < class T >
-void			display_m( T m, std::string s )
+void			display_m( T &m, std::string s )
 {
 	std::cout << s << std::endl;
+
+	// std::cout << "head:" << m.begin()->first << "=>" << m.begin()->second << std::endl;
 
 	for (typename T::iterator it = m.begin(); it != m.end(); ++it)
 		std::cout << it->first << ' ' << it->second

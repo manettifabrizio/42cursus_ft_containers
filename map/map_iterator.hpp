@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/11 15:13:36 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/13 15:20:26 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ namespace ft {
 				class Distance = ptrdiff_t,
 				class Pointer = T*,
 				class Reference = T& >
-	class const_map_iterator : public map_iterator<T, Node>
+	class const_map_iterator
 	{
 
 		typedef T											value_type;

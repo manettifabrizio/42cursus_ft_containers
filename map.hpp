@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 04:04:46 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 17:00:00 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/13 15:39:47 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,14 +145,13 @@ namespace ft
 				element with that key and returns a reference to its mapped value.	*/
 			mapped_type					&operator[]( const key_type &k )
 			{
-				// std::cout << "key:" << k << std::endl;
 
 				iterator it = _t.find(k);
 
 				if (it != end())
 					return (it->second);
 				else
-					return ((*((_t.insert(ft::make_pair(k,mapped_type()))).first))->data.second);
+					return ((*((_t.insert(ft::make_pair(k,mapped_type()))).first)).second);
 			}
 
 			/*					-|-|-|-|-  ITERATORS -|-|-|-|-					*/
@@ -330,7 +329,7 @@ namespace ft
 				return ( _t.count(k) );
 			}
 
-						/*	lower_bound()
+			/*	lower_bound()
 				Returns an iterator pointing to the first element in the container
 				whose key is not considered to go before k (i.e., either it is
 				equivalent or goes after).											*/
