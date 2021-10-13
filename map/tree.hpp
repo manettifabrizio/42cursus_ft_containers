@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/13 15:30:09 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/13 18:41:38 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -380,84 +380,66 @@ namespace ft
 				of elements ([first,last)).											*/
 			void						erase( iterator position )
 			{
-				node		*curr = *position;
-				node		*prev = (*position)->parent;
+				node		*curr = position.base();
+				node		*prev = position.base()->parent;
 
 				// Check if the node to be
 				// deleted has atmost one child.
-				if (curr->left == NULL || curr->right == NULL)
-				{
-					// newCurr will replace
-					// the node to be deleted.
-					node* newCurr;
-
-					// if the left child does not exist.
-					if (curr->left == NULL)
-						newCurr = curr->right;
-					else
-						newCurr = curr->left;
-
-					// check if the node to
-					// be deleted is the root.
-					if (prev == NULL)
+				if (curr->left == nullptr || curr->right == nullptr)
+				{	
+					if (!prev)
 					{
 						delete_node(_root);
-						_root = newCurr;
+						if (curr->right)
+							_root = curr->right;
+						else
+							_root = curr->left;
+						position.base() = _root;
 						return ;
 					}
-
-					// check if the node to be deleted
-					// is prev's left or right child
-					// and then replace this with newCurr
-					if (curr == prev->left)
-						prev->left = newCurr;
+					else if (prev->right == curr)
+					{
+						if (curr->right)
+							prev->right = curr->right;
+						else
+							prev->right = curr->left;
+						delete_node(curr);
+						position.base() = prev->right;
+					}
 					else
-						prev->right = newCurr;
-
-					// free memory of the
-					// node to be deleted.
-					delete_node(curr);
+					{
+						if (curr->right)
+							prev->left = curr->right;
+						else
+							prev->left = curr->left;
+						delete_node(curr);
+						position.base() = prev->left;
+					}
 				}
 				// node to be deleted has
 				// two children.
+				else if (curr->left == nullptr && curr->right == nullptr)
+				{
+					if (prev->right == curr)
+						prev->right = nullptr;
+					else if (prev->left == curr)
+						prev->left = nullptr;
+				}
 				else
 				{
-					node* p = NULL;
-					node* tmp;
-
-					// Compute the inorder successor
-					tmp = curr->right;
-					while (tmp->left != NULL)
+					if (prev && prev->left == curr)
 					{
-						p = tmp;
-						tmp = tmp->left;
+						prev->left = curr->left;
+						prev->left->right = curr->right;
+
+						prev->left->right->parent = prev->left;
 					}
-
-					// Check if the parent of the inorder
-					// successor is the curr or not(i.e. curr=
-					// the node which has the same data as
-					// the given data by the user to be
-					// deleted). If it isn't, then make the
-					// the left child of its parent equal to
-					// the inorder successor'd right child.
-					if (p != NULL)
-						p->left = tmp->right;
-
-					// if the inorder successor was the
-					// curr (i.e. curr = the node which has the
-					// same data as the given data by the
-					// user to be deleted), then make the
-					// right child of the node to be
-					// deleted equal to the right child of
-					// the inorder successor.
-					else
-						curr->right = tmp->right;
-
-					tmp->right = curr->right;
-					tmp->left = curr->left;
-					tmp->parent = curr->parent;
-
-					delete_node(curr);
+					else if (prev && prev->right == curr)
+					{
+						prev->right = curr->left;
+						prev->right->right = curr->right;
+						prev->right->right->parent = prev->right;
+					}
 				}
 			}
 
@@ -478,7 +460,10 @@ namespace ft
 			void						erase( iterator first, iterator last )
 			{
 				for (; first != last; ++first)
+				{
+					std::cout << "it: " << first->first << std::endl;
 					erase(first);
+				}
 			}
 
 			/*	swap()
