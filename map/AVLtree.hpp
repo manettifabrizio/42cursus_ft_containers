@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tree.hpp                                           :+:      :+:    :+:   */
+/*   AVLtree.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/13 18:41:38 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/16 18:27:32 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ namespace ft
 		the right child.
 	*/
 	template < class T, class Compare, class Alloc >
-	class tree
+	class AVLtree
 	{
 		public:
 
@@ -67,8 +67,6 @@ namespace ft
 			/*							MEMBER VARIABLES							*/
 
 			node													*_root;
-			// node													*_sentinel_begin;
-			// node													*_sentinel_end;
 			size_t													_size;
 			value_compare											_comp;
 			allocator_type											_all;
@@ -165,6 +163,87 @@ namespace ft
 				return (n);
 			}
 
+			node							rotateLeft( node n )
+			{
+				node	tmp;				//	A -> B -> C
+				
+				tmp = n.rigth;				//	tmp = B
+				n.right = tmp.left;			//	A->right = B->left
+				tmp.left = n;				//	B->left = A;
+
+				return (tmp);				//	Granparent = B
+			}
+
+			node							rotateRight( node n )
+			{
+				node	tmp;				//	C -> B -> A
+				
+				tmp = n.left;				//	tmp = B;
+				n.left = tmp.right;			//	C->left = B->right
+				tmp.right = n;				//	B->right = C;
+
+				return (tmp);				//	Granparent = B
+			}
+
+			node							rotateLeftRight( node n )
+			{
+				n.left = rotateLeft(n.left);
+				
+				return (rotateRight(n));
+			}
+
+			node							rotateRightLeft( node n )
+			{
+				n.right = rotateRight(n.right);
+
+				return (rotateLeft(n));
+			}
+
+			int								heigth( node *n )
+			{
+				if (!n)
+					return (-1);
+				
+				return ()
+			}
+
+			void							check_balance( node *n )
+			{
+				if (heigth(n.left) - heigth(n.right) > 1 ||
+					heigth(n->left) - heigth(n.right) < 0)
+					rebalance(n);
+				if (!n->parent)
+					return ;
+				check_balance(n->parent);
+			}
+
+			void							insert( node *par, node *n )
+			{
+				if (_comp(par->data, n->data))
+				{
+					if (!par.right)
+					{
+						par->right = n;
+						n->parent = par;
+						_size++;
+					}
+					else
+						insert( par.right, n );
+				}
+				else
+				{
+					if (!par.left)
+					{
+						par->left = n;
+						n->parent = par;
+						_size++;
+					}
+					else
+						insert( par.left, n );
+				}
+				check_balance(n);
+			}
+
 		public:
 
 			/*		-*-*-*-*-*-*-*-  MEMBER FUNCTIONS -*-*-*-*-*-*-*-				*/
@@ -173,13 +252,10 @@ namespace ft
 
 			/*	First (Default constructor)
 				Empty tree, root is NULL.											*/
-			tree( const value_compare& comp = value_compare(),
+			AVLtree( const value_compare& comp = value_compare(),
 				const allocator_type& alloc = allocator_type() ) : _root(nullptr),
 				_size(0), _comp(comp), _all(alloc)
 			{
-				// _sentinel_begin = newNode();
-
-				// _sentinel_end = newNode();
 			}
 
 			/*	Second (Range constructor)
@@ -187,12 +263,11 @@ namespace ft
 				[first,last), with each element constructed from its
 				corresponding element in that range.								*/
 			template <class InputIterator>
-			tree( InputIterator first, InputIterator last,
+			AVLtree( InputIterator first, InputIterator last,
 				const value_compare& comp = value_compare(),
 				const allocator_type& alloc = allocator_type() ) : _root(nullptr),
 				_size(last - first), _comp(comp), _all(alloc)
 			{
-
 				for (first; first != last; ++first)
 					insert((*first)->data);
 			}
@@ -200,7 +275,7 @@ namespace ft
 			/*	Third (Copy constructor)
 				Constructs a container with a copy of each of the elements
 				in x.																*/
-			tree( const tree &x ) : _size(x._size), _comp(x._comp),
+			AVLtree( const tree &x ) : _size(x._size), _comp(x._comp),
 				_all(x._all), _all_node(x._all_node)
 			{
 				copy(_root, x._root);
@@ -208,7 +283,7 @@ namespace ft
 			
 			/*							DESTRUCTOR									*/
 			
-			~tree( void )
+			~AVLtree( void )
 			{
 				deleteTree(_root);
 			}
@@ -218,7 +293,7 @@ namespace ft
 			/*	Assignation operator
 				Assigns new contents to the container, replacing its current
 				content.															*/
-			tree							&operator=( const tree &x )
+			AVLtree							&operator=( const AVLtree &x )
 			{
 				clear();
 
@@ -322,8 +397,11 @@ namespace ft
 				if (!_root)
 				{
 					_root = newNode(nullptr, val);
+					_size++;
 					return (ft::make_pair<iterator,bool>(iterator(_root), true));
 				}
+
+				insert();
 
 				// Da capire perché const_iterator -> iterator non converte e segfaulta
 				ft::pair<iterator, bool>		p = check_key(val.first);

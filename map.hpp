@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 04:04:46 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/13 15:39:47 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/16 17:08:37 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <map>
 #include <memory>
 
-#include "map/tree.hpp"
+#include "map/AVLtree.hpp"
 
 namespace ft
 {
@@ -34,21 +34,21 @@ namespace ft
 
 			/*							MEMBER TYPES							*/
 
-			typedef Key											key_type;
-			typedef	T											mapped_type;
-			typedef ft::pair<const Key,T>						value_type;
-			typedef Compare										key_compare;
-			typedef Alloc										allocator_type;
-			typedef typename allocator_type::reference			reference;
-			typedef typename allocator_type::const_reference	const_reference;
-			typedef typename allocator_type::pointer			pointer;
-			typedef typename allocator_type::const_pointer		const_pointer;
-			typedef	ft::map_iterator<value_type, tree_node<value_type> >			iterator;
+			typedef Key															key_type;
+			typedef	T															mapped_type;
+			typedef ft::pair<const Key,T>										value_type;
+			typedef Compare														key_compare;
+			typedef Alloc														allocator_type;
+			typedef typename allocator_type::reference							reference;
+			typedef typename allocator_type::const_reference					const_reference;
+			typedef typename allocator_type::pointer							pointer;
+			typedef typename allocator_type::const_pointer						const_pointer;
+			typedef	ft::map_iterator<value_type, tree_node<value_type> >		iterator;
 			typedef ft::const_map_iterator<value_type, tree_node<value_type> >	const_iterator;
-			typedef ft::reverse_iterator<T>						reverse_iterator;
-			typedef	const ft::reverse_iterator<T>				const_reverse_iterator;
-			typedef	ptrdiff_t									difference_type;
-			typedef	size_t										size_type;
+			typedef ft::reverse_iterator<T>										reverse_iterator;
+			typedef	const ft::reverse_iterator<T>								const_reverse_iterator;
+			typedef	ptrdiff_t													difference_type;
+			typedef	size_t														size_type;
 
 		private:
 
@@ -125,7 +125,7 @@ namespace ft
 
 			/*							DESTRUCTOR								*/
 			
-			~map( void )
+			~map ( void )
 			{
 			}
 
