@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 18:28:25 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/08 15:38:36 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/18 14:59:17 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,12 @@ namespace ft
 	{
     	return ( ft::pair<T1,T2>(x,y) );
   	}
+
+	template <class T>
+	const T& max (const T& a, const T& b)
+	{
+		return (a < b) ? b : a;
+	}
 
 	/*			-*-*-*-*-*-*-*-  NON-MEMBER FUNCTIONS -*-*-*-*-*-*-*-		*/
 

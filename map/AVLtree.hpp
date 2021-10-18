@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/16 18:27:32 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/18 18:33:42 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,38 +163,49 @@ namespace ft
 				return (n);
 			}
 
-			node							rotateLeft( node n )
+			node							*rotateLeft( node *n )
 			{
-				node	tmp;				//	A -> B -> C
+				node	*tmp;				//	A(n) -> B -> C
 				
-				tmp = n.rigth;				//	tmp = B
-				n.right = tmp.left;			//	A->right = B->left
-				tmp.left = n;				//	B->left = A;
+				tmp = n->right;				//	tmp = B
+				tmp->parent = n->parent;
+				n->right = tmp->left;		//	A->right = B->left
+				n->parent = tmp;
+				tmp->left = n;				//	B->left = A;
 
 				return (tmp);				//	Granparent = B
 			}
 
-			node							rotateRight( node n )
+
+			/*			X					X
+					  	 \					 \
+				   		  C		=>			  B
+						 / \				   \
+						B	A					C
+			*/
+			node							*rotateRight( node *n )
 			{
-				node	tmp;				//	C -> B -> A
+				node	*tmp;				//	C(n) -> B(tmp) -> A
 				
-				tmp = n.left;				//	tmp = B;
-				n.left = tmp.right;			//	C->left = B->right
-				tmp.right = n;				//	B->right = C;
+				tmp = n->left;				//	tmp = B;
+				tmp->parent = n->parent;	//	B->parent = C->parent
+				n->left = tmp->right;		//	C->left = B->right
+				n->parent = tmp;			 
+				tmp->right = n;				//	B->right = C;
 
 				return (tmp);				//	Granparent = B
 			}
 
-			node							rotateLeftRight( node n )
+			node							*rotateLeftRight( node *n )
 			{
-				n.left = rotateLeft(n.left);
+				n->left = rotateLeft(n->left);
 				
 				return (rotateRight(n));
 			}
 
-			node							rotateRightLeft( node n )
+			node							*rotateRightLeft( node *n )
 			{
-				n.right = rotateRight(n.right);
+				n->right = rotateRight(n->right);
 
 				return (rotateLeft(n));
 			}
@@ -202,44 +213,72 @@ namespace ft
 			int								heigth( node *n )
 			{
 				if (!n)
-					return (-1);
-				
-				return ()
+					return (0);
+				else
+        			return (ft::max(heigth(n->left), heigth(n->right)) + 1);
 			}
+
+			void							rebalance( node *n )
+			{
+				//	Unbalanced on the left
+				if (heigth(n->left) - heigth(n->right) > 1)
+				{
+					// Unbalanced on left child
+					if (heigth(n->left->left) > heigth(n->left->right))
+						n = rotateRight(n);
+					// Unbalanced on right child
+					else
+						n = rotateLeftRight(n);
+				}
+				//	Unbalanced on the right
+				else
+				{
+					// Unbalanced on left child
+					if (heigth(n->right->left) < heigth(n->right->right))
+						n = rotateLeft(n);
+					// Unbalanced on right child
+					else
+						n = rotateRightLeft(n);
+				}
+
+				// Node n was the root
+				if (!(n->parent))
+					_root = n;
+			} 
 
 			void							check_balance( node *n )
 			{
-				if (heigth(n.left) - heigth(n.right) > 1 ||
-					heigth(n->left) - heigth(n.right) < 0)
+				if (heigth(n->left) - heigth(n->right) > 1 ||
+					heigth(n->left) - heigth(n->right) < -1)
 					rebalance(n);
-				if (!n->parent)
+				if (!(n->parent))
 					return ;
 				check_balance(n->parent);
 			}
 
-			void							insert( node *par, node *n )
+			void							add( node *par, node *n )
 			{
 				if (_comp(par->data, n->data))
 				{
-					if (!par.right)
+					if (!(par->right))
 					{
 						par->right = n;
 						n->parent = par;
 						_size++;
 					}
 					else
-						insert( par.right, n );
+						add(par->right, n);
 				}
 				else
 				{
-					if (!par.left)
+					if (!par->left)
 					{
 						par->left = n;
 						n->parent = par;
 						_size++;
 					}
 					else
-						insert( par.left, n );
+						add(par->left, n);
 				}
 				check_balance(n);
 			}
@@ -275,7 +314,7 @@ namespace ft
 			/*	Third (Copy constructor)
 				Constructs a container with a copy of each of the elements
 				in x.																*/
-			AVLtree( const tree &x ) : _size(x._size), _comp(x._comp),
+			AVLtree( const AVLtree &x ) : _size(x._size), _comp(x._comp),
 				_all(x._all), _all_node(x._all_node)
 			{
 				copy(_root, x._root);
@@ -401,38 +440,17 @@ namespace ft
 					return (ft::make_pair<iterator,bool>(iterator(_root), true));
 				}
 
-				insert();
-
 				// Da capire perché const_iterator -> iterator non converte e segfaulta
 				ft::pair<iterator, bool>		p = check_key(val.first);
 
 				//	Key found
-				if (p.second == false) {
+				if (p.second == false)
 					return (p);
-				}
 
-				// Key not found				
-				node							*n = _root;
-				node							*parent = nullptr;
+				//	Key not found, create new node
+				node							*newnode = newNode(nullptr, val);
 
-				// Find last leaf using _comp
-				while (n)
-				{
-					parent = n;
-					if (_comp(val, n->data))
-						n = n->left;
-					else
-						n = n->right;
-				}
-
-				node							*newnode = newNode(parent, val);
-
-				if (_comp(val, parent->data))
-					parent->left = newnode;
-				else
-					parent->right = newnode;
-
-				_size++;
+				add(_root, newnode);
 
 				return (ft::make_pair<iterator,bool>(iterator(newnode), true));
 			}
@@ -547,9 +565,9 @@ namespace ft
 			/*	swap()
 				Exchanges the content of the container by the content of x,
 				which is another map of the same type. Sizes may differ.			*/
-			void						swap( tree &x )
+			void						swap( AVLtree &x )
 			{
-				tree		tmp(x);
+				AVLtree		tmp(x);
 
 				x = *this;
 				*this = tmp;

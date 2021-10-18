@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 23:53:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/13 15:24:21 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/18 17:05:22 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,23 @@ int main ()
 
 	TESTED_NAMESPACE::pair<TESTED_NAMESPACE::map<char,int>::iterator,bool> ret;
 	ret = mymap.insert ( TESTED_NAMESPACE::pair<const char,int>('z',500) );
+	std::cout << "ret.secomd: " << ret.second << std::endl;
 	if (ret.second == false)
 	{
 		std::cout << "element 'z' already existed";
 		std::cout << " with a value of " << ret.first->second << '\n';
 	}
 
+	display_m(mymap, "mymap");
+
 	// second insert function version (with hint position):
 	TESTED_NAMESPACE::map<char,int>::iterator it = mymap.begin();
+	// std::cout << "begin:" << it.base()->data.first << std::endl;
 	mymap.insert (it, TESTED_NAMESPACE::pair<const char,int>('b',300));  // max efficiency inserting
-	mymap.insert (it, TESTED_NAMESPACE::pair<const char,int>('c',400));  // no max efficiency inserting
+
+	display_m(mymap, "mymap");
+
+	mymap.insert (it, TESTED_NAMESPACE::pair<const char,int>('c',400));  // no max efficiency inserting  
 
 	display_m(mymap, "mymap");
 

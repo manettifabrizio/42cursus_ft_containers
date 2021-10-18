@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/13 15:20:26 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/18 17:13:43 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,10 @@ namespace ft {
 
 			/* Increment/Decrement												*/
 			
+
+			/*	The increment is always low to high: it always check if there
+				is something on the left before going down on the right.		*/
+
 			// prefix 
 			map_iterator				&operator++( void )
 			{
