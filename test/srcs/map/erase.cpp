@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 23:53:45 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/13 16:11:37 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/19 20:47:14 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ int main ()
 	TESTED_NAMESPACE::map<char,int>::iterator it;
 
 	// insert some values:
-	mymap['a'] = 10;
 	mymap['b'] = 20;
-	mymap['c'] = 30;
-	mymap['d'] = 40;
-	mymap['e'] = 50;
-	mymap['f'] = 60;
+	mymap['d'] = 10;
+	mymap['f'] = 30;
+	mymap['e'] = 40;
+	mymap['c'] = 50;
+	mymap['g'] = 60;
 
 	display_m(mymap, "mymap");
 
@@ -32,6 +32,7 @@ int main ()
 
 	display_m(mymap, "mymap");
 
+	mymap.erase ('y');                  // erasing by key that doesn't exist
 	mymap.erase ('c');                  // erasing by key
 
 	display_m(mymap, "mymap");

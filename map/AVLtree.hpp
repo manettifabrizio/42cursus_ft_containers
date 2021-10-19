@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/18 18:33:42 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/19 21:11:16 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -479,10 +479,19 @@ namespace ft
 				node		*curr = position.base();
 				node		*prev = position.base()->parent;
 
-				// Check if the node to be
-				// deleted has atmost one child.
-				if (curr->left == nullptr || curr->right == nullptr)
-				{	
+				// No children case
+				if (curr->left == nullptr && curr->right == nullptr)
+				{
+					if (prev->right == curr)
+						prev->right = nullptr;
+					else if (prev->left == curr)
+						prev->left = nullptr;
+					delete_node(curr);
+				}
+				// One child case
+				else if (curr->left == nullptr || curr->right == nullptr)
+				{
+					// Delete the root
 					if (!prev)
 					{
 						delete_node(_root);
@@ -490,7 +499,7 @@ namespace ft
 							_root = curr->right;
 						else
 							_root = curr->left;
-						position.base() = _root;
+						// position.base() = _root;
 						return ;
 					}
 					else if (prev->right == curr)
@@ -500,7 +509,7 @@ namespace ft
 						else
 							prev->right = curr->left;
 						delete_node(curr);
-						position.base() = prev->right;
+						prev->right->parent = prev;
 					}
 					else
 					{
@@ -509,34 +518,37 @@ namespace ft
 						else
 							prev->left = curr->left;
 						delete_node(curr);
-						position.base() = prev->left;
+						prev->left->parent = prev;
 					}
 				}
-				// node to be deleted has
-				// two children.
-				else if (curr->left == nullptr && curr->right == nullptr)
-				{
-					if (prev->right == curr)
-						prev->right = nullptr;
-					else if (prev->left == curr)
-						prev->left = nullptr;
-				}
+				// Two childs case
 				else
 				{
+					// Root case to do
+					// if (!prev)
+					// {
+					// 	delete_node(_root);
+					// 	_root = curr->left;
+					// }
 					if (prev && prev->left == curr)
 					{
 						prev->left = curr->left;
 						prev->left->right = curr->right;
-
+						delete_node(curr);
+						prev->left->parent = prev;
 						prev->left->right->parent = prev->left;
 					}
 					else if (prev && prev->right == curr)
 					{
 						prev->right = curr->left;
 						prev->right->right = curr->right;
+						delete_node(curr);
+						prev->right->parent = prev;
 						prev->right->right->parent = prev->right;
 					}
 				}
+
+				check_balance(begin().base());
 			}
 
 			template < typename Key >
@@ -555,10 +567,12 @@ namespace ft
 
 			void						erase( iterator first, iterator last )
 			{
-				for (; first != last; ++first)
+				iterator	tmp;
+
+				while (first != last)
 				{
-					std::cout << "it: " << first->first << std::endl;
-					erase(first);
+					tmp = first++;
+					erase(tmp);
 				}
 			}
 

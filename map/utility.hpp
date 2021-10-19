@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 18:28:25 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/18 14:59:17 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/19 20:39:28 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,8 @@ namespace ft
 	{
 		/*							MEMBER TYPES							*/
 
-		typedef T1			first_type;
-		typedef T2			second_type;
-
-		first_type			first;
-		second_type			second;
+		T1			first;
+		T2			second;
 
 		/*		-*-*-*-*-*-*-*-  MEMBER FUNCTIONS -*-*-*-*-*-*-*-			*/
 
@@ -39,7 +36,7 @@ namespace ft
 
 		/*	first()
 			Constructs a pair object with its elements value-initialized.	*/
-		pair( void ) : first(first_type()), second(second_type())
+		pair( void ) : first(T1()), second(T2())
 		{
 		}
 
@@ -54,18 +51,8 @@ namespace ft
 
 		/*	third()
 			Member first is constructed with a and member second with b.	*/
-		pair( const first_type &a, const second_type &b ) : first(a), second(b)
+		pair( const T1 &a, const T2 &b ) : first(a), second(b)
 		{
-		}
-
-		/*						OPERATOR OVERLOAD							*/
-
-		pair	&operator=( const pair &pr )
-		{
-			first = pr.first;
-			second = pr.second;
-
-			return (*this);
 		}
 	};
 
