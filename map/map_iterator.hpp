@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/18 17:13:43 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/20 16:03:02 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,12 @@ namespace ft {
 
 			reference					operator*( void ) const
 			{
-				return (node->data);
+				return (*(node->data));
 			}
 
 			pointer						operator->( void ) const
 			{
-				return (&(node->data));
+				return (node->data);
 			}
 
 			/* Increment/Decrement												*/

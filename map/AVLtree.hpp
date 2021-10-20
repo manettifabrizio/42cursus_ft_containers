@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/19 21:11:16 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/20 19:05:15 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ namespace ft
 	template < class T >
 	struct							tree_node
 	{
-		T							data;
+		T							*data;
 		tree_node					*left;
 		tree_node					*right;
 		tree_node					*parent;
 	};
 
-	/*	Binary Search Tree class template
+	/*	AVL Tree class template
 		A binary tree is a hierarchical data structure whose behavior is similar
 		to a tree, as it contains root and leaves (a node that has no child).
 		The root of a binary tree is the topmost node. Each node can have at
@@ -63,6 +63,7 @@ namespace ft
 
 			typedef tree_node<value_type>								node;
 			typedef typename Alloc::template rebind<node>::other		allocator_node;
+			typedef typename Alloc::template rebind<value_type>::other	allocator_data;
 
 			/*							MEMBER VARIABLES							*/
 
@@ -71,6 +72,7 @@ namespace ft
 			value_compare											_comp;
 			allocator_type											_all;
 			allocator_node											_all_node;
+			allocator_data											_all_data;
 
 			/*							TREE UTILITIES								*/
 
@@ -80,8 +82,9 @@ namespace ft
 				node		*n;
 
 				n = _all_node.allocate(1);
+				n->data = _all_data.allocate(1);
 
-				_all.construct(&(n->data), data);
+				_all.construct(n->data, data);
 
 				n->left = nullptr;
 				n->right = nullptr;
@@ -92,7 +95,8 @@ namespace ft
 
 			void			delete_node( node *n )
 			{
-				_all.destroy(&(n->data));
+				_all.destroy(n->data);
+				_all_data.deallocate(n->data, 1);
 				_all_node.deallocate(n, 1);
 
 				n = nullptr;
@@ -110,12 +114,12 @@ namespace ft
 				}
 			}
 
-			void			deleteTree( node *elem )
+			void			delete_tree( node *elem )
 			{
 				if (elem)
 				{
-					deleteTree(elem->left);
-					deleteTree(elem->right);
+					delete_tree(elem->left);
+					delete_tree(elem->right);
 					delete_node(elem);
 				}
 			}
@@ -141,11 +145,20 @@ namespace ft
 
 				return (ft::make_pair<const_iterator,bool>(it, true));
 			}
-			
-			node							*leftMostNode( void ) const
-			{
-				node		*n = _root;
 
+			// node							*leftMostNode( void ) const
+			// {
+			// 	node		*n = _root;
+
+			// 	if (n)
+			// 		while (n->left)
+			// 			n = n->left;
+
+			// 	return (n);
+			// }
+
+			node							*leftMostNode( node *n ) const
+			{
 				if (n)
 					while (n->left)
 						n = n->left;
@@ -153,9 +166,8 @@ namespace ft
 				return (n);
 			}
 
-			node							*rightMostNode( void ) const
+			node							*rightMostNode( node *n ) const
 			{
-				node		*n = _root;
 				if (n)
 					while (n->right)
 						n = n->right;
@@ -258,7 +270,7 @@ namespace ft
 
 			void							add( node *par, node *n )
 			{
-				if (_comp(par->data, n->data))
+				if (_comp(*(par->data), *(n->data)))
 				{
 					if (!(par->right))
 					{
@@ -324,7 +336,7 @@ namespace ft
 			
 			~AVLtree( void )
 			{
-				deleteTree(_root);
+				delete_tree(_root);
 			}
 
 			/*						OPERATOR OVERLOAD								*/
@@ -353,12 +365,12 @@ namespace ft
 				in the tree.														*/
 			iterator					begin( void )
 			{
-				return ( iterator(leftMostNode()) );
+				return ( iterator(leftMostNode(_root)) );
 			}
 
 			const_iterator				begin( void ) const
 			{
-				return ( const_iterator(leftMostNode()) );
+				return ( const_iterator(leftMostNode(_root)) );
 			}
 
 			/*	end()
@@ -471,6 +483,14 @@ namespace ft
 					insert(*first);
 			}
 
+  			// value_type		*copy_pair(value_type p)
+			// {
+			// 	value_type *par = _all.allocator(1);
+			// 	*par = value_type(p.first, p.second);
+
+    		// 	return ( par );
+  			// }
+
 			/*	erase()
 				Removes from the map container either a single element or a range
 				of elements ([first,last)).											*/
@@ -525,12 +545,14 @@ namespace ft
 				else
 				{
 					// Root case to do
-					// if (!prev)
-					// {
-					// 	delete_node(_root);
-					// 	_root = curr->left;
-					// }
-					if (prev && prev->left == curr)
+					if (!prev)
+					{
+						curr = rightMostNode(curr->left);
+						_root->data = curr->data;
+						curr->data = nullptr;
+						erase(iterator(curr));		// Check why if I delete this line it segfault
+					}
+					else if (prev && prev->left == curr)
 					{
 						prev->left = curr->left;
 						prev->left->right = curr->right;
