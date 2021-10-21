@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 23:54:02 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 15:51:58 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ int main ()
 
 	std::cout << "mymap1 contains:\n";
 
-	std::pair<char,int> highest = *mymap1.rbegin();          // last element
+	TESTED_NAMESPACE::pair<char,int> highest1 = *mymap1.rbegin();          // last element
 
-	TESTED_NAMESPACE::map<char,int>::iterator it = mymap1.begin();
+	TESTED_NAMESPACE::map<char,int>::iterator it1 = mymap1.begin();
 	do {
-	std::cout << it->first << " => " << it->second << '\n';
-	} while ( mymap1.value_comp()(*it++, highest) );
+	std::cout << it1->first << " => " << it1->second << '\n';
+	} while ( mymap1.value_comp()(*it1++, highest1) );
 
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 12:03:22 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/30 15:43:04 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 19:04:11 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,6 @@ namespace ft
 			explicit vector( const allocator_type& alloc = allocator_type() ) :
 				_array(nullptr), _size(0), _capacity(0), _all(alloc)
 			{
-				// std::cout << "First constructor" << std::endl;
 			}
 
 			/* Second (Fill constructor)
@@ -131,13 +130,10 @@ namespace ft
 				const allocator_type& alloc = allocator_type() ) : _size(n),
 				_capacity(compute_capacity()), _all(alloc)
 			{
-				// std::cout << "Constructor II: " << n << std::endl;
-
 				_array = _all.allocate(_capacity);
 
 				for (size_type i = 0; i < n; i++)
 					_all.construct(&(_array[i]), val);
-
 			}
 			
 			/* Third (Range constructor)

@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/21 11:29:43 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 18:37:44 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define TREE_HPP
 
 #include "map_iterator.hpp"
-#include "../reverse_iterator.hpp"
+#include "map_reverse_iterator.hpp"
 #include "utility.hpp"
 
 namespace ft
@@ -55,8 +55,8 @@ namespace ft
 			typedef typename allocator_type::difference_type			difference_type;
 			typedef typename ft::map_iterator<T, tree_node<T> >			iterator;
 			typedef typename ft::const_map_iterator<T, tree_node<T> >	const_iterator;
-			typedef typename ft::reverse_iterator<iterator>				reverse_iterator;
-			typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+			typedef typename ft::map_reverse_iterator<iterator>			reverse_iterator;
+			typedef typename ft::map_reverse_iterator<const_iterator>	const_reverse_iterator;
 
 
 		private:
@@ -100,18 +100,8 @@ namespace ft
 				_all_node.deallocate(n, 1);
 
 				n = nullptr;
-			}
 
-			void			copy( node *to, node *from )
-			{
-				if (!from)
-					to = nullptr;
-				else
-				{
-					to = newNode(from->parent, from->data);
-					copy(to->left, from->left);
-					copy(to->right, from->right);
-				}
+				_size--;
 			}
 
 			void			delete_tree( node *elem )
@@ -145,17 +135,6 @@ namespace ft
 
 				return (ft::make_pair<const_iterator,bool>(it, true));
 			}
-
-			// node							*leftMostNode( void ) const
-			// {
-			// 	node		*n = _root;
-
-			// 	if (n)
-			// 		while (n->left)
-			// 			n = n->left;
-
-			// 	return (n);
-			// }
 
 			node							*leftMostNode( node *n ) const
 			{
@@ -240,11 +219,9 @@ namespace ft
 						n = rotateRight(n);
 					// Unbalanced on right child
 					else
-					{
 						n = rotateLeftRight(n);
-						if (n->parent)
-							n->parent->left = n;
-					}
+					if (n->parent)
+						n->parent->left = n;
 				}
 				//	Unbalanced on the right
 				else
@@ -254,11 +231,9 @@ namespace ft
 						n = rotateLeft(n);
 					// Unbalanced on right child
 					else
-					{
 						n = rotateRightLeft(n);
-						if (n->parent)
-							n->parent->right = n;
-					}
+					if (n->parent)
+						n->parent->right = n;
 				}
 
 				// Node n was the root
@@ -268,6 +243,8 @@ namespace ft
 
 			void							check_balance( node *n )
 			{
+				if (!n)
+					return ;
 				if (heigth(n->left) - heigth(n->right) > 1 ||
 					heigth(n->left) - heigth(n->right) < -1)
 					rebalance(n);
@@ -285,7 +262,6 @@ namespace ft
 					{
 						par->right = n;
 						n->parent = par;
-						_size++;
 					}
 					else
 						add(par->right, n);
@@ -296,7 +272,6 @@ namespace ft
 					{
 						par->left = n;
 						n->parent = par;
-						_size++;
 					}
 					else
 						add(par->left, n);
@@ -328,17 +303,17 @@ namespace ft
 				const allocator_type& alloc = allocator_type() ) : _root(nullptr),
 				_size(last - first), _comp(comp), _all(alloc)
 			{
-				for (first; first != last; ++first)
-					insert((*first)->data);
+				for (; first != last; ++first)
+					insert(*first);
 			}
 
 			/*	Third (Copy constructor)
 				Constructs a container with a copy of each of the elements
 				in x.																*/
 			AVLtree( const AVLtree &x ) : _size(x._size), _comp(x._comp),
-				_all(x._all), _all_node(x._all_node)
+				_all(x._all), _all_node(x._all_node), _all_data(x._all_data)
 			{
-				copy(_root, x._root);
+				insert(x.begin(), x.end());
 			}
 			
 			/*							DESTRUCTOR									*/
@@ -357,12 +332,11 @@ namespace ft
 			{
 				clear();
 
-				// _sentinel_begin = x._sentinel_begin;
-				// _sentinel_end = x._sentinel_end;
-				_size = x._size;
 				_all = x._all;
+				_all_node = x._all_node;
+				_all_data = x._all_data;
 
-				copy(_root, x._root);
+				insert(x.begin(), x.end());
 
 				return (*this);
 			}
@@ -400,12 +374,12 @@ namespace ft
 				the container (i.e., its reverse beginning).						*/
 			reverse_iterator 			rbegin( void )
 			{
-				return ( reverse_iterator(end()) );
+				return ( reverse_iterator(newNode(rightMostNode(_root))) );
 			}
 
 			const_reverse_iterator 		rbegin( void ) const
 			{
-				return ( const_reverse_iterator(end()) );
+				return ( const_reverse_iterator(newNode(rightMostNode(_root)) ));
 			}
 			
 			/*	rend()
@@ -473,6 +447,8 @@ namespace ft
 
 				add(_root, newnode);
 
+				_size++;
+
 				return (ft::make_pair<iterator,bool>(iterator(newnode), true));
 			}
 
@@ -492,14 +468,6 @@ namespace ft
 					insert(*first);
 			}
 
-  			// value_type		*copy_pair(value_type p)
-			// {
-			// 	value_type *par = _all.allocator(1);
-			// 	*par = value_type(p.first, p.second);
-
-    		// 	return ( par );
-  			// }
-
 			/*	erase()
 				Removes from the map container either a single element or a range
 				of elements ([first,last)).											*/
@@ -511,11 +479,19 @@ namespace ft
 				// No children case
 				if (curr->left == nullptr && curr->right == nullptr)
 				{
-					if (prev->right == curr)
-						prev->right = nullptr;
-					else if (prev->left == curr)
-						prev->left = nullptr;
-					delete_node(curr);
+					if (!prev)
+					{
+						delete_node(_root);
+						_root = nullptr;
+					}
+					else
+					{
+						if (prev->right == curr)
+							prev->right = nullptr;
+						else if (prev->left == curr)
+							prev->left = nullptr;
+						delete_node(curr);
+					}
 				}
 				// One child case
 				else if (curr->left == nullptr || curr->right == nullptr)
@@ -523,13 +499,13 @@ namespace ft
 					// Delete the root
 					if (!prev)
 					{
-						delete_node(_root);
 						if (curr->right)
-							_root = curr->right;
+							curr = curr->right;
 						else
-							_root = curr->left;
-						// position.base() = _root;
-						return ;
+							curr = curr->left;
+						delete_node(_root);
+						_root = curr;
+						curr->parent = nullptr;
 					}
 					else if (prev->right == curr)
 					{
@@ -623,8 +599,7 @@ namespace ft
 				leaving the container with a size of 0.								*/
 			void						clear( void )
 			{
-				for (iterator it = begin(); it != end(); ++it)
-					_all.destroy(&((*it)->data));
+				erase(begin(), end());
 				
 				_size = 0;
 			}
@@ -671,13 +646,8 @@ namespace ft
 				and returns the number of matches.									*/
 			template < typename Key >
 			size_type					count ( const Key &k ) const
-			{
-				iterator it = find(k);
-
-				if (it != end())
-					return (1);
-				
-				return (0);
+			{	
+				return (find(k) != end());
 			}
 	};
 }

@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 21:05:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/22 17:25:16 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 17:41:09 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ namespace ft {
 			typedef typename it_traits::difference_type			difference_type;
 			typedef typename it_traits::pointer					pointer;
 			typedef typename it_traits::reference				reference;
-
-		public:
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 

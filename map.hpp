@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 04:04:46 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/21 11:31:54 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 17:21:45 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ namespace ft
 			typedef typename allocator_type::const_pointer						const_pointer;
 			typedef	ft::map_iterator<value_type, tree_node<value_type> >		iterator;
 			typedef ft::const_map_iterator<value_type, tree_node<value_type> >	const_iterator;
-			typedef ft::reverse_iterator<T>										reverse_iterator;
-			typedef	const ft::reverse_iterator<T>								const_reverse_iterator;
+			typedef ft::map_reverse_iterator<iterator>							reverse_iterator;
+			typedef	const ft::map_reverse_iterator<const_iterator>				const_reverse_iterator;
 			typedef	ptrdiff_t													difference_type;
 			typedef	size_t														size_type;
 
@@ -357,7 +357,7 @@ namespace ft
 				iterator it;
 
 				for (it = begin(); it != end(); ++it)
-					if (_key_comp(it->first, k))
+					if (!_key_comp(it->first, k) && it->first != k)
 						return (it);
 				
 				return (it);
@@ -368,7 +368,7 @@ namespace ft
 				const_iterator it;
 
 				for (it = begin(); it != end(); ++it)
-					if (_key_comp(it->first, k))
+					if (!_key_comp(it->first, k) && it->first != k)
 						return (it);
 				
 				return (it);
@@ -381,20 +381,18 @@ namespace ft
 			{
 				iterator it = lower_bound(k);
 
-				if (it == end())
-					it = upper_bound();
+				iterator it1 = upper_bound(k);
 			
-				return (ft::make_pair<iterator,iterator>(it, it));
+				return (ft::make_pair<iterator,iterator>(it, it1));
 			}
 
 			ft::pair<const_iterator,const_iterator>	equal_range( const key_type &k ) const
 			{
 				const_iterator it = lower_bound(k);
 
-				if (it == end())
-					it = upper_bound();
+				iterator it1 = upper_bound();
 			
-				return (ft::make_pair<const_iterator,const_iterator>(it, it));
+				return (ft::make_pair<const_iterator,const_iterator>(it, it1));
 			}
 
 			/*					-|-|-|-|-  ALLOCATOR -|-|-|-|-						*/

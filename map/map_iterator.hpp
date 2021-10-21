@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/20 16:03:02 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 18:29:42 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,14 @@ namespace ft {
 				class Reference = T& >
 	class map_iterator
 	{
-
-		typedef T											value_type;
-		typedef Node*	                                    node_pointer;
-		typedef Distance									difference_type;
-		typedef Pointer										pointer;
-		typedef Reference									reference;
-		typedef Category									iterator_category;
-
 		public:
+
+			typedef T											value_type;
+			typedef Node*										node_pointer;
+			typedef Distance									difference_type;
+			typedef Pointer										pointer;
+			typedef Reference									reference;
+			typedef Category									iterator_category;
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
@@ -207,12 +206,12 @@ namespace ft {
 
 			reference					operator*( void ) const
 			{
-				return (node->data);
+				return (*(node->data));
 			}
 
 			pointer						operator->( void ) const
 			{
-				return (&(node->data));
+				return (node->data);
 			}
 
 			/* Increment/Decrement												*/

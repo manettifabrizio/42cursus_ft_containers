@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 23:53:59 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 15:46:40 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int main ()
 	first['z']=32;
 
 	display_m(first, "first");
+
+	std::cout << "Size of first: " << first.size() << '\n';
 
 	second=first;                // second now contains 3 ints
 

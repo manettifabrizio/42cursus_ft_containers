@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 23:55:19 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 14:00:30 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,6 @@ int main ()
 	TESTED_NAMESPACE::map<char,int> third (second);
 
 	display_m(third, "third");
-
-	TESTED_NAMESPACE::map<char,int,classcomp> fourth;                 // class as Compare
-
-	display_m(fourth, "fourth");
-
-	bool(*fn_pt)(char,char) = fncomp;
-	TESTED_NAMESPACE::map<char,int,bool(*)(char,char)> fifth (fn_pt); // function pointer as Compare
-
-	display_m(fifth, "fifth");
 
 	return 0;
 }

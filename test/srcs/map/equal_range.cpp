@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 23:53:42 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:30:19 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 14:59:49 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main ()
   mymap['b']=20;
   mymap['c']=30;
 
-  std::pair<TESTED_NAMESPACE::map<char,int>::iterator,TESTED_NAMESPACE::map<char,int>::iterator> ret;
+  TESTED_NAMESPACE::pair<TESTED_NAMESPACE::map<char,int>::iterator,TESTED_NAMESPACE::map<char,int>::iterator> ret;
   ret = mymap.equal_range('b');
 
   std::cout << "lower bound points to: ";
