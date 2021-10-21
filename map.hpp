@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 04:04:46 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/18 14:14:58 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 11:31:54 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,13 +145,7 @@ namespace ft
 				element with that key and returns a reference to its mapped value.	*/
 			mapped_type					&operator[]( const key_type &k )
 			{
-
-				iterator it = _t.find(k);
-
-				if (it != end())
-					return (it->second);
-				else
-					return ((*((_t.insert(ft::make_pair(k,mapped_type()))).first)).second);
+				return ((*((_t.insert(ft::make_pair(k,mapped_type()))).first)).second);
 			}
 
 			/*					-|-|-|-|-  ITERATORS -|-|-|-|-					*/

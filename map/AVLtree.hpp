@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/20 19:05:15 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/21 11:29:43 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,7 +240,11 @@ namespace ft
 						n = rotateRight(n);
 					// Unbalanced on right child
 					else
+					{
 						n = rotateLeftRight(n);
+						if (n->parent)
+							n->parent->left = n;
+					}
 				}
 				//	Unbalanced on the right
 				else
@@ -250,7 +254,11 @@ namespace ft
 						n = rotateLeft(n);
 					// Unbalanced on right child
 					else
+					{
 						n = rotateRightLeft(n);
+						if (n->parent)
+							n->parent->right = n;
+					}
 				}
 
 				// Node n was the root
@@ -270,6 +278,7 @@ namespace ft
 
 			void							add( node *par, node *n )
 			{
+				// Key is < than par key
 				if (_comp(*(par->data), *(n->data)))
 				{
 					if (!(par->right))
@@ -550,7 +559,7 @@ namespace ft
 						curr = rightMostNode(curr->left);
 						_root->data = curr->data;
 						curr->data = nullptr;
-						erase(iterator(curr));		// Check why if I delete this line it segfault
+						erase(iterator(curr));
 					}
 					else if (prev && prev->left == curr)
 					{
