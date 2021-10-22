@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ../../general.hpp                                        :+:      :+:    :+:   */
+/*   general.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/17 22:16:03 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:06:15 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/22 17:59:50 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <stack>
 
 #include "../vector.hpp"
 #include "../map.hpp"
+#include "../stack.hpp"
 
 # ifndef TESTED_NAMESPACE
 # define TESTED_NAMESPACE ft
@@ -77,5 +79,15 @@ void			display_m( T &m, std::string s )
 		std::cout << it->first << ' ' << it->second
 					<< std::endl;
 }
+
+// template < class T >		
+// void			display_s( T &s )
+// {
+// 	typename T::container_type v;
+
+// 	v = s.c;
+
+// 	display(v, "mystack");
+// }
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 21:05:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/21 17:41:09 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/22 19:46:34 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ namespace ft {
 			typedef typename it_traits::difference_type			difference_type;
 			typedef typename it_traits::pointer					pointer;
 			typedef typename it_traits::reference				reference;
+
+			// operator iterator<value_type const*>() const
+			// {
+			// 	return iterator<value_type const *>(_p);
+			// }
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
@@ -147,6 +152,13 @@ namespace ft {
 
 				return (*this);
 			}
+
+			// bool operator==(const VectorIterator & rhs) const {
+			// 			return p==rhs.p;
+			// 	}
+			// 	bool operator!=(const VectorIterator & rhs) const {
+			// 			return p!=rhs.p;
+			// }
 
 		protected:
 	

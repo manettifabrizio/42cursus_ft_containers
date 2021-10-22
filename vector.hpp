@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 12:03:22 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/21 19:04:11 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/22 19:46:58 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <type_traits>
 
 #include "vector/vector_iterator.hpp"
-#include "reverse_iterator.hpp"
+#include "vector/vector_reverse_iterator.hpp"
 #include "vector/type_traits.hpp"
 
 namespace ft
@@ -397,11 +397,10 @@ namespace ft
 				InputIterator last,
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value, int>::type = 0 )
 			{
+				// Delete all last - first
 				if (_size > 0)
 				{
 					size_t	size = last - first;
-
-					// std::cout << "size:" << size << std::endl;
 
 					if (size > _capacity)
 						reserve(size);
@@ -409,8 +408,7 @@ namespace ft
 					clear();
 				}
 
-				for (; first != last; first++)
-					push_back(*first);
+				insert(begin(), first, last);
 			}
 
 			void						assign ( size_type n,

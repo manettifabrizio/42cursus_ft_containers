@@ -24,7 +24,7 @@ display ()
 	# 1=file 2=compile 3=output 4=std_compile
 	b[0]="✅"; b[1]="❌";
 
-	printf "%-35s: COMPILE: ${b[$2]} | OUT: ${b[$3]} | STD: ${b[$4]}\n" $1
+	printf "%-35s: COMPILE: ${b[$2]} | OUT: ${b[$3]}\n" $1
 }
 
 test () {
@@ -41,10 +41,9 @@ test () {
 		std_exec="$EXEC_FOLDER/std.$container.$testname"
 
 		compile "$TESTS_FOLDER/$container/$file" "ft" $ft_exec; ft_ret=$?
-		compile "$TESTS_FOLDER/$container/$file" "std" $std_exec; std_ret=$?
-		std_compilation=$std_ret
+		compile "$TESTS_FOLDER/$container/$file" "std" $std_exec
 
-		if [ $ft_ret -eq 0 ] && [ $std_ret -eq 0 ]; then
+		if [ $ft_ret -eq 0 ]; then
 			compilation=0
 		else
 			compilation=1
@@ -53,7 +52,7 @@ test () {
 		./$ft_exec > $ft_log ; ft_ret=$?
 		./$std_exec > $std_log ; std_ret=$?
 
-		if [ $ft_ret -eq 0 ] && [ $std_ret -eq 0 ]; then
+		if [ $ft_ret -eq 0 ]; then
 			compilation=0
 		else
 			compilation=1
@@ -72,7 +71,7 @@ test () {
 
 		rm -rf $ft_exec* $std_exec* $EXEC_FOLDER/*.dSYM $container.hpp.gch &>/dev/null
 
-		display "$container/$file" $compilation $output $std_compilation
+		display "$container/$file" $compilation $output
 
 	done
 }
