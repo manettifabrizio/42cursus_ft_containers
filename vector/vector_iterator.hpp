@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 21:05:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/22 19:46:34 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/25 17:55:03 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,11 @@ namespace ft {
 			typedef typename it_traits::pointer					pointer;
 			typedef typename it_traits::reference				reference;
 
-			// operator iterator<value_type const*>() const
-			// {
-			// 	return iterator<value_type const *>(_p);
-			// }
+			// Operator to pass from non-cont to const and vice-versa
+			operator iterator<value_type const*>() const
+			{
+					return iterator<value_type const *>(_p);
+			}
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
@@ -153,12 +154,15 @@ namespace ft {
 				return (*this);
 			}
 
-			// bool operator==(const VectorIterator & rhs) const {
-			// 			return p==rhs.p;
-			// 	}
-			// 	bool operator!=(const VectorIterator & rhs) const {
-			// 			return p!=rhs.p;
-			// }
+			bool						operator==(const iterator &rhs) const
+			{
+				return (_p == rhs._p);
+			}
+
+			bool						operator!=(const iterator &rhs) const
+			{
+				return (_p != rhs._p);
+			}
 
 		protected:
 	

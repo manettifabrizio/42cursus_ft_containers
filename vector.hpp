@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 12:03:22 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/22 19:46:58 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/25 18:09:43 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ namespace ft
 
 				_capacity = (_size) ? 1 : 0;
 
-				while (_capacity && _capacity <= _size)
+				while (_capacity && _capacity < _size)
 					_capacity *= 2;
 
 				if (_capacity > max_size())
@@ -97,11 +97,8 @@ namespace ft
 
 			void						destroy_array( void )
 			{
-
-				if (_array)
+				if (_array && _size)
 				{
-					// std::cout << "_size:" << _size << std::endl;
-
 					for (iterator it = begin(); it != end(); ++it)
 						_all.destroy(it.base());
 					_all.deallocate(_array, _capacity);
@@ -144,15 +141,9 @@ namespace ft
 			vector( InputIterator first, InputIterator last,
 				const allocator_type& alloc = allocator_type(), 
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value, int>::type = 0 ) :
-				_size(last - first), _capacity(compute_capacity()), _all(alloc)
+				_size(0), _capacity(compute_capacity()), _all(alloc)
 			{
-				_array = _all.allocate(_capacity);
-
-				size_t	i = 0;
-
-				for (; first != last; first++)
-					_all.construct(&(_array[i++]), *first);
-
+				assign(first, last);
 			}
 			
 			/* Fourth (Copy constructor)
@@ -393,20 +384,10 @@ namespace ft
 				Assigns new contents to the vector, replacing its current
 				contents, and modifying its size accordingly.					*/
 			template <class InputIterator>
-  			void						assign( InputIterator first,
-				InputIterator last,
+  			void						assign( InputIterator first, InputIterator last,
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value, int>::type = 0 )
 			{
-				// Delete all last - first
-				if (_size > 0)
-				{
-					size_t	size = last - first;
-
-					if (size > _capacity)
-						reserve(size);
-
-					clear();
-				}
+				clear();
 
 				insert(begin(), first, last);
 			}
@@ -414,16 +395,9 @@ namespace ft
 			void						assign ( size_type n,
 				const value_type &val )
 			{
-				// std::cout << "Assign II" << std::endl;
-
-				destroy_array();
-
-				_size = 0;
-
-				_capacity = 0;
-
-				for (size_type i = 0; i < n; i++)
-					push_back(val);
+				clear();
+				
+				insert(begin(), n, val);
 			}
 
 			/*	push_back()
@@ -432,8 +406,6 @@ namespace ft
 				new element.													*/
 			void						push_back( const value_type& val )
 			{
-				// std::cout << "push_back: " << _size << std::endl;
-
 				if ((_size + 1) > _capacity)
 				{
 
@@ -476,13 +448,18 @@ namespace ft
 			iterator					insert ( iterator position,
 				const value_type& val )
 			{
-
 				if (position != end())
 				{
-					// std::cout << "ciao << std::endl;
+					int	x = 0;
+
+					for (iterator it = begin(); it != position; it++)
+						x++;
+
 					reserve(_size + 1);
 
 					iterator it = end();
+
+					position = begin() + x;
 
 					for (; it != position; --it)
 						_all.construct(it.base(), *(it - 1));
@@ -502,31 +479,8 @@ namespace ft
 			void						insert( iterator position,
 				size_type n, const value_type &val )
 			{
-				if (position != end())
-				{
-					size_type pos = position - begin();
-
-					reserve(_size + n);
-
-					position = begin() + pos;
-
-					// std::cout << "position:" << *position << std::endl;
-
-					iterator it = end() + (n - 1);
-
-					for (; it - n != begin() - 1; --it)
-						_all.construct(it.base(), *(it - n)); 
-					
-					it = position;
-
-					for (; it != position + n; ++it)
-						_all.construct(it.base(), val);
-
-					_size += n;
-				}
-				else
-					for (size_type x = 0; x < n; x++)
-						push_back(val);
+				while (n--)
+					position = insert(position, val);
 			}
 	
 			template < class InputIterator >
@@ -534,32 +488,26 @@ namespace ft
 				InputIterator first, InputIterator last,
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value, int>::type = 0 )
 			{
+				int		i = 0;
 
-				size_type n = last - first;
+				for (InputIterator it = first; it != last; it++)
+					i++;
 
-				if (position != end())
+				value_type	tmp[i];
+
+				i = 0;
+				for (InputIterator it = first; it != last; it++)
 				{
-					size_type pos = position - begin();
-
-					reserve(_size + n);
-
-					position = begin() + pos;
-
-					iterator it = end() + (n - 1);
-
-					for (; it - n != begin() - 1; --it)
-						_all.construct(it.base(), *(it - n)); 
-					
-					it = position;
-
-					for (; it != position + n; ++it)
-						_all.construct(it.base(), *(first++));
-
-					_size += n;
+					tmp[i++] = *it;
 				}
-				else
-					for (size_type x = 0; x < n; x++)
-						push_back(*(first++));
+
+				i = 0;
+				while (first != last)
+				{
+					position = insert(position, tmp[i++]);
+					position++;
+					first++;
+				}
 			}
 		
 			/*	erase()
@@ -583,9 +531,12 @@ namespace ft
 			{
 				size_type	pos = first - begin();
 
-				size_type	n = last - first;
+				size_type	n = 0;
 
-				_size -= (last - first);
+				for (iterator it = first; it != last; it++)
+					n++;
+
+				_size -= n;
 
 				for (iterator it = first; it != last; ++it)
 					_all.destroy(it.base());
@@ -602,11 +553,25 @@ namespace ft
 				Sizes may differ.												*/
 			void					swap( vector &x )
 			{
-				vector		tmp(x);
+				size_type 	tmp;
+				value_type	*tmp_arr;
+				Alloc		tmp_all;
 
-				x = *this;
-				*this = tmp;
+				tmp = x.size();
+				x._size = _size;
+				_size = tmp;
 
+				tmp = x._capacity;
+				x._capacity = _capacity;
+				_capacity = tmp;
+
+				tmp_arr = x._array;
+				x._array = _array;
+				_array = tmp_arr;
+
+				tmp_all = x._all;
+				x._all = _all;
+				_all = tmp_all;
 			}
 
 			/*	erase()

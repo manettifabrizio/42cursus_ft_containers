@@ -21,10 +21,10 @@ compile ()
 
 display ()
 {
-	# 1=file 2=compile 3=output 4=std_compile
+	# 1=file 2=compile 3=output 4=std_time 5=ft_time
 	b[0]="✅"; b[1]="❌";
 
-	printf "%-35s: COMPILE: ${b[$2]} | OUT: ${b[$3]}\n" $1
+	printf "%-35s: COMPILE: ${b[$2]} | OUT: ${b[$3]} | STD_TIME: $4 | FT_TIME: $5\n" $1
 }
 
 test () {
@@ -48,9 +48,11 @@ test () {
 		else
 			compilation=1
 		fi
-		
-		./$ft_exec > $ft_log ; ft_ret=$?
-		./$std_exec > $std_log ; std_ret=$?
+
+		exec 3>&1 4>&2
+		std_time=$(TIMEFORMAT="%R"; { time ./$std_exec > $std_log 2>&4; std_ret=$?; } 2>&1)
+		ft_time=$(TIMEFORMAT="%R"; { time ./$ft_exec > $ft_log 2>&4; ft_ret=$?; } 2>&1)
+		exec 3>&- 4>&-
 
 		if [ $ft_ret -eq 0 ]; then
 			compilation=0
@@ -71,7 +73,7 @@ test () {
 
 		rm -rf $ft_exec* $std_exec* $EXEC_FOLDER/*.dSYM $container.hpp.gch &>/dev/null
 
-		display "$container/$file" $compilation $output
+		display "$container/$file" $compilation $output $std_time $ft_time
 
 	done
 }

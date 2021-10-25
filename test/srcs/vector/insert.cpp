@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 00:19:24 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:07:12 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/25 12:22:24 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void		_int()
 
 	it = myvector.begin();
 	it = myvector.insert ( it , 200 );
+
+	display(myvector, "myvector");
 
 	std::cout << "return:" << *it << std::endl;
 
