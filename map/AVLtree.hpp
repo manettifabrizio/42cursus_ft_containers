@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/21 18:37:44 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/25 23:07:49 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,8 +310,9 @@ namespace ft
 			/*	Third (Copy constructor)
 				Constructs a container with a copy of each of the elements
 				in x.																*/
-			AVLtree( const AVLtree &x ) : _size(x._size), _comp(x._comp),
-				_all(x._all), _all_node(x._all_node), _all_data(x._all_data)
+			AVLtree( const AVLtree &x ) : _root(nullptr), _size(0),
+				_comp(x._comp), _all(x._all), _all_node(x._all_node),
+				_all_data(x._all_data)
 			{
 				insert(x.begin(), x.end());
 			}
@@ -374,11 +375,17 @@ namespace ft
 				the container (i.e., its reverse beginning).						*/
 			reverse_iterator 			rbegin( void )
 			{
+				if (!_root)
+					return ( reverse_iterator(iterator(nullptr)) );
+
 				return ( reverse_iterator(newNode(rightMostNode(_root))) );
 			}
 
 			const_reverse_iterator 		rbegin( void ) const
 			{
+				if (!_root)
+					return ( reverse_iterator(iterator(nullptr)) );
+
 				return ( const_reverse_iterator(newNode(rightMostNode(_root)) ));
 			}
 			
@@ -388,11 +395,17 @@ namespace ft
 				(which is considered its reverse end).								*/	
 			reverse_iterator			rend( void )
 			{
+				if (!_root)
+					return ( reverse_iterator(iterator(nullptr)) );
+
 				return ( reverse_iterator(begin()) );
 			}
 
 			const_reverse_iterator		rend( void ) const
 			{
+				if (!_root)
+					return ( reverse_iterator( iterator(nullptr)) );
+				
 				return ( const_reverse_iterator(begin()) );
 			}
 
