@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/25 23:07:49 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/26 18:14:01 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,13 @@ namespace ft
 				
 				tmp = n->right;				//	tmp = B
 				tmp->parent = n->parent;
+				if (n->parent)
+				{
+					if (n->parent->left == n)
+						n->parent->left = tmp;
+					else if (n->parent->right == n)
+						n->parent->right = tmp;
+				}
 				n->right = tmp->left;		//	A->right = B->left
 				n->parent = tmp;
 				tmp->left = n;				//	B->left = A;
@@ -180,6 +187,13 @@ namespace ft
 				
 				tmp = n->left;				//	tmp = B;
 				tmp->parent = n->parent;	//	B->parent = C->parent
+				if (n->parent)
+				{
+					if (n->parent->left == n)
+						n->parent->left = tmp;
+					else if (n->parent->right == n)
+						n->parent->right = tmp;
+				}
 				n->left = tmp->right;		//	C->left = B->right
 				n->parent = tmp;			 
 				tmp->right = n;				//	B->right = C;
@@ -220,8 +234,6 @@ namespace ft
 					// Unbalanced on right child
 					else
 						n = rotateLeftRight(n);
-					if (n->parent)
-						n->parent->left = n;
 				}
 				//	Unbalanced on the right
 				else
@@ -232,8 +244,6 @@ namespace ft
 					// Unbalanced on right child
 					else
 						n = rotateRightLeft(n);
-					if (n->parent)
-						n->parent->right = n;
 				}
 
 				// Node n was the root

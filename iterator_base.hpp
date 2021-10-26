@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 20:40:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/21 15:59:25 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/26 18:15:42 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <iterator>
+#include <cstddef>
 
 namespace ft
 {

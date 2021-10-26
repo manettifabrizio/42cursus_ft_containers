@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 18:48:49 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/22 19:52:09 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/26 17:54:39 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,12 @@ namespace ft
 				Returns a reference to the top element in the stack.			*/
 			value_type			&top()
 			{
-				return (*(c.end() - 1));
+				return (c.back());
 			}
 
 			const value_type	&top() const
 			{
-				return (*(c.end() - 1));
+				return (c.back());
 			}
 
 			/*	size()
@@ -88,7 +88,7 @@ namespace ft
 				its size by one.												*/
 			void				pop()
 			{
-				c.erase(c.end() - 1);
+				c.pop_back();
 			}
 
 		/*				-|-|-|-|- RELATIONAL OPERATORS -|-|-|-|-					*/
