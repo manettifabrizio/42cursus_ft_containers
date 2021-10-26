@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 12:03:22 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/25 18:09:43 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/26 18:48:41 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <vector>
 #include <list>
 #include <stdexcept>
-#include <type_traits>
 
 #include "vector/vector_iterator.hpp"
 #include "vector/vector_reverse_iterator.hpp"
@@ -97,13 +96,14 @@ namespace ft
 
 			void						destroy_array( void )
 			{
-				if (_array && _size)
-				{
+				if (_size)
 					for (iterator it = begin(); it != end(); ++it)
 						_all.destroy(it.base());
-					_all.deallocate(_array, _capacity);
+				if (_array)
+				{
+					_all.deallocate(_array, _size);
 
-					_array = nullptr;
+					_array = NULL;
 				}
 			}
 
@@ -116,7 +116,7 @@ namespace ft
 			/* First (Default constructor)
 				Empty container, no elements									*/
 			explicit vector( const allocator_type& alloc = allocator_type() ) :
-				_array(nullptr), _size(0), _capacity(0), _all(alloc)
+				_array(NULL), _size(0), _capacity(0), _all(alloc)
 			{
 			}
 
@@ -141,7 +141,7 @@ namespace ft
 			vector( InputIterator first, InputIterator last,
 				const allocator_type& alloc = allocator_type(), 
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value, int>::type = 0 ) :
-				_size(0), _capacity(compute_capacity()), _all(alloc)
+				_array(NULL), _size(0), _capacity(compute_capacity()), _all(alloc)
 			{
 				assign(first, last);
 			}

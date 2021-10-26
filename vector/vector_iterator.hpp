@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 21:05:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/25 17:55:03 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/26 18:23:39 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ namespace ft {
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
-			iterator( void ) : _p(nullptr) { }
+			iterator( void ) : _p(NULL) { }
 
 			iterator( Iter it ) : _p(it) { }
 

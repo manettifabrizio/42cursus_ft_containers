@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/21 18:29:42 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/26 18:23:39 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace ft {
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
-			map_iterator( void ) : node(nullptr) { }
+			map_iterator( void ) : node(NULL) { }
 
 			map_iterator( node_pointer it ) : node(it) { }
 
@@ -82,11 +82,11 @@ namespace ft {
 			map_iterator				&operator++( void )
 			{
 				//	Down to the right and left as possible
-				if (node->right != nullptr)
+				if (node->right != NULL)
 					{
 						node = node->right;
 
-						while (node->left != nullptr)
+						while (node->left != NULL)
 							node = node->left;
 					}
 				// Move up the tree until we have moved over a
@@ -94,7 +94,7 @@ namespace ft {
 				else
 				{
 					node_pointer p = node->parent;
-					while (p != nullptr && node == p->right)
+					while (p != NULL && node == p->right)
 					{
 						node = p;
 						p = p->parent;
@@ -119,11 +119,11 @@ namespace ft {
 			map_iterator				&operator--( void )
 			{
 				//	One to the left and downode to right as possible
-				if (node->left != nullptr)
+				if (node->left != NULL)
 				{
 					node = node->left;
 
-					while (node->right != nullptr)
+					while (node->right != NULL)
 						node = node->right;
 				}
 				// Move up the tree until we have moved over a
@@ -131,7 +131,7 @@ namespace ft {
 				else
 				{
 					node_pointer	p = node->parent;
-					while (p != nullptr && node == p->left)
+					while (p != NULL && node == p->left)
 					{
 						node = p;
 						p = p->parent;
@@ -184,7 +184,7 @@ namespace ft {
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
-			const_map_iterator( void ) : node(nullptr) { }
+			const_map_iterator( void ) : node(NULL) { }
 
 			const_map_iterator( node_pointer it ) : node(it) { }
 
@@ -220,11 +220,11 @@ namespace ft {
 			const_map_iterator				&operator++( void )
 			{
 				//	Down to the right and left as possible
-				if (node->right != nullptr)
+				if (node->right != NULL)
 					{
 						node = node->right;
 
-						while (node->left != nullptr)
+						while (node->left != NULL)
 							node = node->left;
 					}
 				// Move up the tree until we have moved over a
@@ -232,7 +232,7 @@ namespace ft {
 				else
 				{
 					node_pointer p = node->parent;
-					while (p != nullptr && node == p->right)
+					while (p != NULL && node == p->right)
 					{
 						node = p;
 						p = p->parent;
@@ -257,11 +257,11 @@ namespace ft {
 			const_map_iterator				&operator--( void )
 			{
 				//	One to the left and downode to right as possible
-				if (node->left != nullptr)
+				if (node->left != NULL)
 				{
 					node = node->left;
 
-					while (node->right != nullptr)
+					while (node->right != NULL)
 						node = node->right;
 				}
 				// Move up the tree until we have moved over a
@@ -269,7 +269,7 @@ namespace ft {
 				else
 				{
 					node_pointer p = node->parent;
-					while (p != nullptr && node == p->left)
+					while (p != NULL && node == p->left)
 					{
 						node = p;
 						p = p->parent;

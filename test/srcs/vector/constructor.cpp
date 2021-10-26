@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/17 20:39:42 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/07/28 01:07:12 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/26 18:49:13 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@
 int main ()
 {
 	// constructors used in the same order as described above:
-	TESTED_NAMESPACE::vector<int> first;                                // empty vector of ints
+	TESTED_NAMESPACE::vector<int> first;                                			// empty vector of ints
 	TESTED_NAMESPACE::vector<std::string> second (4, "toto");                       // four ints with value 100
-	TESTED_NAMESPACE::vector<std::string> third (second.begin(),second.end());  // iterating through second
-	TESTED_NAMESPACE::vector<std::string> fourth (third);                       // a copy of third
+	TESTED_NAMESPACE::vector<std::string> third (second.begin(), second.end());  	// iterating through second
+	TESTED_NAMESPACE::vector<std::string> fourth (third);							// a copy of third
 
 	// the iterator constructor can also be used to construct from arrays:
 	A myclasses[] = { A(1, 2.0f, "ciao"), A(1, 3.0, "mamma") };

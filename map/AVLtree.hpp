@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/26 18:14:01 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/26 19:27:35 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ namespace ft
 
 			/*							TREE UTILITIES								*/
 
-			node			*newNode( node *par = nullptr,
+			node			*newNode( node *par = NULL,
 				const_reference data = value_type() )
 			{
 				node		*n;
@@ -84,10 +84,10 @@ namespace ft
 				n = _all_node.allocate(1);
 				n->data = _all_data.allocate(1);
 
-				_all.construct(n->data, data);
+				_all_data.construct(n->data, data);
 
-				n->left = nullptr;
-				n->right = nullptr;
+				n->left = NULL;
+				n->right = NULL;
 				n->parent = par;
 
 				return (n);
@@ -95,17 +95,19 @@ namespace ft
 
 			void			delete_node( node *n )
 			{
-				_all.destroy(n->data);
+				_all_data.destroy(n->data);
 				_all_data.deallocate(n->data, 1);
 				_all_node.deallocate(n, 1);
 
-				n = nullptr;
+				n = NULL;
 
 				_size--;
 			}
 
 			void			delete_tree( node *elem )
 			{
+				// std::cout << "data:" << elem->data->first << std::endl;
+
 				if (elem)
 				{
 					delete_tree(elem->left);
@@ -298,7 +300,7 @@ namespace ft
 			/*	First (Default constructor)
 				Empty tree, root is NULL.											*/
 			AVLtree( const value_compare& comp = value_compare(),
-				const allocator_type& alloc = allocator_type() ) : _root(nullptr),
+				const allocator_type& alloc = allocator_type() ) : _root(NULL),
 				_size(0), _comp(comp), _all(alloc)
 			{
 			}
@@ -310,7 +312,7 @@ namespace ft
 			template <class InputIterator>
 			AVLtree( InputIterator first, InputIterator last,
 				const value_compare& comp = value_compare(),
-				const allocator_type& alloc = allocator_type() ) : _root(nullptr),
+				const allocator_type& alloc = allocator_type() ) : _root(NULL),
 				_size(last - first), _comp(comp), _all(alloc)
 			{
 				for (; first != last; ++first)
@@ -320,7 +322,7 @@ namespace ft
 			/*	Third (Copy constructor)
 				Constructs a container with a copy of each of the elements
 				in x.																*/
-			AVLtree( const AVLtree &x ) : _root(nullptr), _size(0),
+			AVLtree( const AVLtree &x ) : _root(NULL), _size(0),
 				_comp(x._comp), _all(x._all), _all_node(x._all_node),
 				_all_data(x._all_data)
 			{
@@ -372,12 +374,12 @@ namespace ft
 				in the map container.												*/
 			iterator					end( void )
 			{
-				return ( iterator(nullptr) );
+				return ( iterator(NULL) );
 			}
 
 			const_iterator				end( void ) const
 			{
-				return ( const_iterator(nullptr) );
+				return ( const_iterator(NULL) );
 			}
 			
 			/*	rbegin()
@@ -386,7 +388,7 @@ namespace ft
 			reverse_iterator 			rbegin( void )
 			{
 				if (!_root)
-					return ( reverse_iterator(iterator(nullptr)) );
+					return ( reverse_iterator(iterator(NULL)) );
 
 				return ( reverse_iterator(newNode(rightMostNode(_root))) );
 			}
@@ -394,7 +396,7 @@ namespace ft
 			const_reverse_iterator 		rbegin( void ) const
 			{
 				if (!_root)
-					return ( reverse_iterator(iterator(nullptr)) );
+					return ( reverse_iterator(iterator(NULL)) );
 
 				return ( const_reverse_iterator(newNode(rightMostNode(_root)) ));
 			}
@@ -406,7 +408,7 @@ namespace ft
 			reverse_iterator			rend( void )
 			{
 				if (!_root)
-					return ( reverse_iterator(iterator(nullptr)) );
+					return ( reverse_iterator(iterator(NULL)) );
 
 				return ( reverse_iterator(begin()) );
 			}
@@ -414,7 +416,7 @@ namespace ft
 			const_reverse_iterator		rend( void ) const
 			{
 				if (!_root)
-					return ( reverse_iterator( iterator(nullptr)) );
+					return ( reverse_iterator( iterator(NULL)) );
 				
 				return ( const_reverse_iterator(begin()) );
 			}
@@ -453,7 +455,7 @@ namespace ft
 				// Tree root doesn't exist
 				if (!_root)
 				{
-					_root = newNode(nullptr, val);
+					_root = newNode(NULL, val);
 					_size++;
 					return (ft::make_pair<iterator,bool>(iterator(_root), true));
 				}
@@ -466,7 +468,7 @@ namespace ft
 					return (p);
 
 				//	Key not found, create new node
-				node							*newnode = newNode(nullptr, val);
+				node							*newnode = newNode(NULL, val);
 
 				add(_root, newnode);
 
@@ -500,24 +502,24 @@ namespace ft
 				node		*prev = position.base()->parent;
 
 				// No children case
-				if (curr->left == nullptr && curr->right == nullptr)
+				if (curr->left == NULL && curr->right == NULL)
 				{
 					if (!prev)
 					{
 						delete_node(_root);
-						_root = nullptr;
+						_root = NULL;
 					}
 					else
 					{
 						if (prev->right == curr)
-							prev->right = nullptr;
+							prev->right = NULL;
 						else if (prev->left == curr)
-							prev->left = nullptr;
+							prev->left = NULL;
 						delete_node(curr);
 					}
 				}
 				// One child case
-				else if (curr->left == nullptr || curr->right == nullptr)
+				else if (curr->left == NULL || curr->right == NULL)
 				{
 					// Delete the root
 					if (!prev)
@@ -528,7 +530,7 @@ namespace ft
 							curr = curr->left;
 						delete_node(_root);
 						_root = curr;
-						curr->parent = nullptr;
+						curr->parent = NULL;
 					}
 					else if (prev->right == curr)
 					{
@@ -557,7 +559,7 @@ namespace ft
 					{
 						curr = rightMostNode(curr->left);
 						_root->data = curr->data;
-						curr->data = nullptr;
+						curr->data = NULL;
 						erase(iterator(curr));
 					}
 					else if (prev && prev->left == curr)
