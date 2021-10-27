@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/26 19:27:35 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/27 18:43:11 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,15 @@ namespace ft
 
 			typedef tree_node<value_type>								node;
 			typedef typename Alloc::template rebind<node>::other		allocator_node;
-			typedef typename Alloc::template rebind<value_type>::other	allocator_data;
 
 			/*							MEMBER VARIABLES							*/
 
 			node													*_root;
+			node													*_end;
 			size_t													_size;
 			value_compare											_comp;
 			allocator_type											_all;
 			allocator_node											_all_node;
-			allocator_data											_all_data;
 
 			/*							TREE UTILITIES								*/
 
@@ -82,9 +81,9 @@ namespace ft
 				node		*n;
 
 				n = _all_node.allocate(1);
-				n->data = _all_data.allocate(1);
+				n->data = _all.allocate(1);
 
-				_all_data.construct(n->data, data);
+				_all.construct(n->data, data);
 
 				n->left = NULL;
 				n->right = NULL;
@@ -95,19 +94,23 @@ namespace ft
 
 			void			delete_node( node *n )
 			{
-				_all_data.destroy(n->data);
-				_all_data.deallocate(n->data, 1);
-				_all_node.deallocate(n, 1);
-
+				if (n)
+				{
+					if (n->data)
+					{
+						_all.destroy(n->data);
+						_all.deallocate(n->data, 1);
+					}
+					_all_node.deallocate(n, 1);
+				}
 				n = NULL;
 
-				_size--;
+				if (_size)
+					_size--;
 			}
 
 			void			delete_tree( node *elem )
 			{
-				// std::cout << "data:" << elem->data->first << std::endl;
-
 				if (elem)
 				{
 					delete_tree(elem->left);
@@ -149,8 +152,8 @@ namespace ft
 
 			node							*rightMostNode( node *n ) const
 			{
-				if (n)
-					while (n->right)
+				if (n && n != _end)
+					while (n->right && n->right != _end)
 						n = n->right;
 
 				return (n);
@@ -219,7 +222,7 @@ namespace ft
 
 			int								heigth( node *n )
 			{
-				if (!n)
+				if (!n || n == _end)
 					return (0);
 				else
         			return (ft::max(heigth(n->left), heigth(n->right)) + 1);
@@ -270,7 +273,7 @@ namespace ft
 				// Key is < than par key
 				if (_comp(*(par->data), *(n->data)))
 				{
-					if (!(par->right))
+					if (!par->right || par->right == _end)
 					{
 						par->right = n;
 						n->parent = par;
@@ -301,7 +304,7 @@ namespace ft
 				Empty tree, root is NULL.											*/
 			AVLtree( const value_compare& comp = value_compare(),
 				const allocator_type& alloc = allocator_type() ) : _root(NULL),
-				_size(0), _comp(comp), _all(alloc)
+				_end(NULL), _size(0), _comp(comp), _all(alloc)
 			{
 			}
 
@@ -313,7 +316,7 @@ namespace ft
 			AVLtree( InputIterator first, InputIterator last,
 				const value_compare& comp = value_compare(),
 				const allocator_type& alloc = allocator_type() ) : _root(NULL),
-				_size(last - first), _comp(comp), _all(alloc)
+				_end(NULL), _size(last - first), _comp(comp), _all(alloc)
 			{
 				for (; first != last; ++first)
 					insert(*first);
@@ -322,9 +325,8 @@ namespace ft
 			/*	Third (Copy constructor)
 				Constructs a container with a copy of each of the elements
 				in x.																*/
-			AVLtree( const AVLtree &x ) : _root(NULL), _size(0),
-				_comp(x._comp), _all(x._all), _all_node(x._all_node),
-				_all_data(x._all_data)
+			AVLtree( const AVLtree &x ) : _root(NULL), _end(NULL), _size(0),
+				_comp(x._comp), _all(x._all), _all_node(x._all_node)
 			{
 				insert(x.begin(), x.end());
 			}
@@ -347,7 +349,6 @@ namespace ft
 
 				_all = x._all;
 				_all_node = x._all_node;
-				_all_data = x._all_data;
 
 				insert(x.begin(), x.end());
 
@@ -374,12 +375,26 @@ namespace ft
 				in the map container.												*/
 			iterator					end( void )
 			{
-				return ( iterator(NULL) );
+				if (_size)
+				{
+					if (!_end)
+					{
+						_end = _all_node.allocate(1);
+						_end->data = NULL;
+
+						_end->left = NULL;
+						_end->right = NULL;
+					}
+					_end->parent = rightMostNode(_root);
+					rightMostNode(_root)->right = _end;
+				}
+
+				return ( iterator(_end) );
 			}
 
 			const_iterator				end( void ) const
 			{
-				return ( const_iterator(NULL) );
+				return ( const_iterator(_end) );
 			}
 			
 			/*	rbegin()
@@ -390,15 +405,15 @@ namespace ft
 				if (!_root)
 					return ( reverse_iterator(iterator(NULL)) );
 
-				return ( reverse_iterator(newNode(rightMostNode(_root))) );
+				return ( reverse_iterator(end()) );
 			}
 
 			const_reverse_iterator 		rbegin( void ) const
 			{
 				if (!_root)
-					return ( reverse_iterator(iterator(NULL)) );
+					return ( const_reverse_iterator(iterator(NULL)) );
 
-				return ( const_reverse_iterator(newNode(rightMostNode(_root)) ));
+				return ( const_reverse_iterator(end()) );
 			}
 			
 			/*	rend()
@@ -472,6 +487,9 @@ namespace ft
 
 				add(_root, newnode);
 
+				//	Update _end
+				end();
+
 				_size++;
 
 				return (ft::make_pair<iterator,bool>(iterator(newnode), true));
@@ -502,12 +520,14 @@ namespace ft
 				node		*prev = position.base()->parent;
 
 				// No children case
-				if (curr->left == NULL && curr->right == NULL)
+				if (!curr->left && (!curr->right || curr->right == _end))
 				{
 					if (!prev)
 					{
 						delete_node(_root);
 						_root = NULL;
+						delete_node(_end);
+						_end = NULL;
 					}
 					else
 					{
@@ -519,7 +539,7 @@ namespace ft
 					}
 				}
 				// One child case
-				else if (curr->left == NULL || curr->right == NULL)
+				else if (!curr->left || (!curr->right || curr->right == _end))
 				{
 					// Delete the root
 					if (!prev)
@@ -558,6 +578,7 @@ namespace ft
 					if (!prev)
 					{
 						curr = rightMostNode(curr->left);
+						_all.deallocate(_root->data, 1);
 						_root->data = curr->data;
 						curr->data = NULL;
 						erase(iterator(curr));

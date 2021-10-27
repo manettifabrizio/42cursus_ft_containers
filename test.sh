@@ -93,12 +93,13 @@ test () {
 #./test.sh -c
 
 mkdir $EXEC_FOLDER $LOG_FOLDER $DIFF_FOLDER &> /dev/null
-
-if [ $1 = "-o" ]; then
-	container=$2
-	test $3
-elif [ $1 = "-c" ]; then
-	rm -rf $DIFF_FOLDER/*.diff $LOG_FOLDER/*.log $EXEC_FOLDER/*.dSYM *.dSYM .vscode a.out
+if [ $# -gt 0 ]; then
+	if [ $1 = "-o" ]; then
+		container=$2
+		test $3
+	elif [ $1 = "-c" ]; then
+		rm -rf $DIFF_FOLDER/*.diff $LOG_FOLDER/*.log $EXEC_FOLDER/*.dSYM *.dSYM .vscode a.out
+	fi
 else
 	containers=(vector map stack)
 	if [ $# -ne 0 ]; then
