@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/17 22:16:03 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/22 17:59:50 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/27 20:33:51 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 #include <string>
 #include <map>
 #include <stack>
+#include <list>
 
-#include "../vector.hpp"
-#include "../map.hpp"
-#include "../stack.hpp"
+#include "../Vector.hpp"
+#include "../Map.hpp"
+#include "../Stack.hpp"
 
 # ifndef TESTED_NAMESPACE
 # define TESTED_NAMESPACE ft

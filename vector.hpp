@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 12:03:22 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/26 18:48:41 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/27 20:31:34 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 #include <list>
 #include <stdexcept>
 
-#include "vector/vector_iterator.hpp"
-#include "vector/vector_reverse_iterator.hpp"
+#include "vector/VectorIterator.hpp"
+#include "vector/VectorReverseIterator.hpp"
 #include "vector/type_traits.hpp"
 
 namespace ft

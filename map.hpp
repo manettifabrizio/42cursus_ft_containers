@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/18 04:04:46 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/21 17:21:45 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/10/27 20:31:21 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/10/27 20:31:23 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,15 @@
 #include <map>
 #include <memory>
 
-#include "map/AVLtree.hpp"
+#include "map/AVL.hpp"
 
 namespace ft
 {
+	/*	Map class template
+		Maps are associative containers that store elements formed by a
+		combination of a key value and a mapped value, following a
+		specific order.
+	*/
 
 	template <	class Key,												// map::key_type
 				class T,												// map::mapped_type
@@ -163,19 +168,6 @@ namespace ft
 				return (_t.begin());
 			}
 
-			/*	end()
-				Returns an iterator referring to the past-the-end element
-				in the map container.											*/
-			iterator					end( void )
-			{
-				return (_t.end());
-			}
-
-			const_iterator				end( void ) const
-			{
-				return (_t.end());
-			}
-
 			/*	rbegin()
 				Returns a reverse iterator pointing to the last element in
 				the container (i.e., its reverse beginning).						*/
@@ -187,6 +179,19 @@ namespace ft
 			const_reverse_iterator 		rbegin( void ) const
 			{
 				return ( _t.rbegin() );
+			}
+
+			/*	end()
+				Returns an iterator referring to the past-the-end element
+				in the map container.											*/
+			iterator					end( void )
+			{
+				return (_t.end());
+			}
+
+			const_iterator				end( void ) const
+			{
+				return (_t.end());
 			}
 			
 			/*	rend()
@@ -207,14 +212,14 @@ namespace ft
 
 			/*	empty()
 				Test whether the container is empty.								*/
-			bool				empty( void ) const
+			bool						empty( void ) const
 			{
 				return ( _t.empty() );
 			}
 
 			/*	size()
 				Return the number of nodes in the container.						*/
-			size_type			size( void ) const
+			size_type					size( void ) const
 			{
 				return ( _t.size() );
 			}
@@ -222,7 +227,7 @@ namespace ft
 			/*	max_size()
 				Returns the maximum number of elements that the container
 				can hold.															*/
-			size_type			max_size( void ) const
+			size_type					max_size( void ) const
 			{
 				return ( _t.max_size() );
 			}
@@ -338,7 +343,7 @@ namespace ft
 				return (it);
 			}
 
-			const_iterator					lower_bound( const key_type &k ) const
+			const_iterator				lower_bound( const key_type &k ) const
 			{
 				const_iterator it;
 

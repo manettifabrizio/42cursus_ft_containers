@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AVLtree.hpp                                        :+:      :+:    :+:   */
+/*   AVL.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/27 18:43:11 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/27 20:32:38 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TREE_HPP
-# define TREE_HPP
+#ifndef AVL_HPP
+# define AVL_HPP
 
-#include "map_iterator.hpp"
-#include "map_reverse_iterator.hpp"
+#include "MapIterator.hpp"
+#include "MapReverseIterator.hpp"
 #include "utility.hpp"
 
 namespace ft
@@ -31,11 +31,9 @@ namespace ft
 	};
 
 	/*	AVL Tree class template
-		A binary tree is a hierarchical data structure whose behavior is similar
-		to a tree, as it contains root and leaves (a node that has no child).
-		The root of a binary tree is the topmost node. Each node can have at
-		most two children, which are referred to as the left child and
-		the right child.
+		AVL tree is a self-balancing Binary Search Tree (BST) where the
+		difference between heights of left and right subtrees cannot be
+		more than one for all nodes.
 	*/
 	template < class T, class Compare, class Alloc >
 	class AVLtree
@@ -179,13 +177,6 @@ namespace ft
 				return (tmp);				//	Granparent = B
 			}
 
-
-			/*			X					X
-					  	 \					 \
-				   		  C		=>			  B
-						 / \				   \
-						B	A					C
-			*/
 			node							*rotateRight( node *n )
 			{
 				node	*tmp;				//	C(n) -> B(tmp) -> A

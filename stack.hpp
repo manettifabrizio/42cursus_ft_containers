@@ -6,18 +6,20 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 18:48:49 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/26 17:54:39 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/10/27 20:32:27 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STACK_HPP
 # define STACK_HPP
 
-#include "vector.hpp"
+#include "Vector.hpp"
 
 namespace ft
 {
-	template <class T, class Container = ft::vector<T> >
+	template <	class T,							// stack::value_type
+				class Container = ft::vector<T>		// stack::container_type
+			>
 	class stack
 	{
 		public:
@@ -26,6 +28,8 @@ namespace ft
 
 			typedef	T											value_type;
 			typedef Container									container_type;
+			typedef value_type&									reference;
+			typedef const value_type&							const_reference;
 			typedef	size_t										size_type;
 	
 		protected:

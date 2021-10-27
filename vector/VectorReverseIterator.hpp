@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_reverse_iterator.hpp                           :+:      :+:    :+:   */
+/*   VectorReverseIterator.hpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/21 17:26:26 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/21 18:39:41 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/16 16:29:25 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/10/27 20:33:23 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAP_REVERSE_ITERATOR_HPP
-# define MAP_REVERSE_ITERATOR_HPP
+#ifndef VECTORREVERSEITERATOR_HPP
+# define VECTORREVERSEITERATOR_HPP
 
 #include "../iterator_base.hpp"
 
@@ -23,31 +23,34 @@ namespace ft {
 	*/
 
 	template < class Iter >
-	class map_reverse_iterator : public Iter
+	class reverse_iterator : public iterator<typename Iter::iterator_type>
 	{
 
 			/*							MEMBER TYPES							*/
 
+		private:
+
+			typedef iterator_traits<Iter>						it_traits;
+
 		public:
 
-			typedef Iter									iterator_type;
-			typedef typename Iter::value_type				value_type;
-			typedef typename Iter::node_pointer				node_pointer;
-			typedef typename Iter::difference_type			difference_type;
-			typedef typename Iter::pointer					pointer;
-			typedef typename Iter::reference				reference;
-			typedef typename Iter::iterator_category		iterator_category;
+			typedef Iter										iterator_type;
+			typedef typename it_traits::iterator_category		iterator_category;
+			typedef typename it_traits::value_type				value_type;
+			typedef typename it_traits::difference_type			difference_type;
+			typedef typename it_traits::pointer					pointer;
+			typedef typename it_traits::reference				reference;
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
-			map_reverse_iterator( void ) : Iter() { }
+			reverse_iterator( void ) : Iter() { }
 
-			explicit map_reverse_iterator( Iter it ) : _p(it)
+			explicit reverse_iterator( Iter it ) : _p(it)
 			{
 			}
 			
 			template <class It>
-			map_reverse_iterator ( const map_reverse_iterator<It> &rev_it ) : _p(rev_it.base())
+			reverse_iterator ( const reverse_iterator<It> &rev_it ) : _p(rev_it.base())
 			{
 			}
 
@@ -60,7 +63,7 @@ namespace ft {
 
 			/* Assignation														*/
 
-			map_reverse_iterator			&operator=( const map_reverse_iterator &rhs )
+			reverse_iterator			&operator=( const reverse_iterator &rhs )
 			{
 				if (this != &rhs)
 					_p = rhs.base();
@@ -94,7 +97,7 @@ namespace ft {
 			/* Increment/Decrement												*/
 			
 			// prefix 
-			map_reverse_iterator			&operator++( void )
+			reverse_iterator			&operator++( void )
 			{
 				--_p;
 
@@ -102,16 +105,16 @@ namespace ft {
 			}
 		
 			// postfix
-			map_reverse_iterator			operator++( int )
+			reverse_iterator			operator++( int )
 			{
-				map_reverse_iterator old = *this;
+				reverse_iterator old = *this;
 				operator++();
 				
 				return (old);
 			}
 		
 			// prefix
-			map_reverse_iterator			&operator--( void )
+			reverse_iterator			&operator--( void )
 			{
 				++_p;
 
@@ -119,9 +122,9 @@ namespace ft {
 			}
 		
 			// postfix
-			map_reverse_iterator 			operator--( int )
+			reverse_iterator 			operator--( int )
 			{
-				map_reverse_iterator old = *this;
+				reverse_iterator old = *this;
 				operator--();
 				
 				return (old);
@@ -129,32 +132,32 @@ namespace ft {
 
 			/* Arithmethic														*/
 
-			map_reverse_iterator			operator+( const int n )
+			reverse_iterator			operator+( const int n )
 			{
-				map_reverse_iterator	tmp = *this;
+				reverse_iterator	tmp = *this;
 
 				tmp._p -= n;
 
 				return (tmp);
 			}
 
-			map_reverse_iterator			&operator+=( difference_type n )
+			reverse_iterator			&operator+=( difference_type n )
 			{
 				_p -= n;
 
 				return (*this);
 			}
 
-			map_reverse_iterator			operator-( const int n )
+			reverse_iterator			operator-( const int n )
 			{
-				map_reverse_iterator	tmp = *this;
+				reverse_iterator	tmp = *this;
 
 				tmp._p += n;
 
 				return (tmp);
 			}
 
-			map_reverse_iterator			&operator-=( difference_type n )
+			reverse_iterator			&operator-=( difference_type n )
 			{
 				_p += n;
 
@@ -167,6 +170,5 @@ namespace ft {
 
 	};
 }
-
 
 #endif

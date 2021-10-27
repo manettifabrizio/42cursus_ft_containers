@@ -1,29 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector_reverse_iterator.hpp                        :+:      :+:    :+:   */
+/*   VectorIterator.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/16 16:29:25 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/22 17:34:54 by fmanetti         ###   ########.fr       */
+/*   Created: 2021/07/19 21:05:52 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/10/27 20:33:12 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REVERSE_ITERATOR_HPP
-# define REVERSE_ITERATOR_HPP
+#ifndef VECTORITERATOR_HPP
+# define VECTORITERATOR_HPP
 
 #include "../iterator_base.hpp"
 
 namespace ft {
 
-	/*	Reverse Iterator class template
-		This class reverses the direction in which a bidirectional or
-		random-access iterator iterates through a range.
+	/*	Random Access Iterator class template
+		Random-access iterators are iterators that can be used to access
+		elements at an arbitrary offset position relative to the element
+		they point to, offering the same functionality as pointers.
 	*/
 
-	template < class Iter >
-	class reverse_iterator : public iterator<typename Iter::iterator_type>
+	template < typename Iter >
+	class iterator
 	{
 
 			/*							MEMBER TYPES							*/
@@ -41,19 +42,25 @@ namespace ft {
 			typedef typename it_traits::pointer					pointer;
 			typedef typename it_traits::reference				reference;
 
+			// Operator to pass from non-cont to const and vice-versa
+			operator iterator<value_type const*>() const
+			{
+					return iterator<value_type const *>(_p);
+			}
+
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
-			reverse_iterator( void ) : Iter() { }
+			iterator( void ) : _p(NULL) { }
 
-			explicit reverse_iterator( Iter it ) : _p(it)
+			iterator( Iter it ) : _p(it) { }
+
+			iterator( const iterator &src )
 			{
-			}
-			
-			template <class It>
-			reverse_iterator ( const reverse_iterator<It> &rev_it ) : _p(rev_it.base())
-			{
+				_p = src._p;
 			}
 
+			~iterator( void ) { }
+	
 			iterator_type				base( void ) const
 			{
 				return (_p);
@@ -61,60 +68,27 @@ namespace ft {
 
 			/*						OPERATORS OVERLOAD							*/
 
-			/* Assignation														*/
-
-			reverse_iterator			&operator=( const reverse_iterator &rhs )
-			{
-				if (this != &rhs)
-					_p = rhs.base();
-
-				return (*this);
-			}
-
 			/* Dereference														*/
-			
+
 			reference					operator*( void ) const
 			{
-				Iter		ret(_p);
-
-				--ret;
-
-				return (*ret);
+				return (*_p);
 			}
 
-			pointer						operator->( void ) const
+			iterator_type				operator->( void ) const
 			{
-				return (&(operator*()));
+				return (_p);
 			}
 
 			reference					operator[]( difference_type i ) const
 			{
-				*this += i;
-
-				return (*this);
+				return (_p[i]);
 			}
 
 			/* Increment/Decrement												*/
 			
 			// prefix 
-			reverse_iterator			&operator++( void )
-			{
-				--_p;
-
-				return (*this);
-			}
-		
-			// postfix
-			reverse_iterator			operator++( int )
-			{
-				reverse_iterator old = *this;
-				operator++();
-				
-				return (old);
-			}
-		
-			// prefix
-			reverse_iterator			&operator--( void )
+			iterator					&operator++( void )
 			{
 				++_p;
 
@@ -122,9 +96,26 @@ namespace ft {
 			}
 		
 			// postfix
-			reverse_iterator 			operator--( int )
+			iterator					operator++( int )
 			{
-				reverse_iterator old = *this;
+				iterator old = *this;
+				operator++();
+				
+				return (old);
+			}
+		
+			// prefix
+			iterator					&operator--( void )
+			{
+				--_p;
+
+				return (*this);
+			}
+		
+			// postfix
+			iterator					operator--( int )
+			{
+				iterator old = *this;
 				operator--();
 				
 				return (old);
@@ -132,43 +123,53 @@ namespace ft {
 
 			/* Arithmethic														*/
 
-			reverse_iterator			operator+( const int n )
+			iterator					operator+( difference_type n ) const
 			{
-				reverse_iterator	tmp = *this;
-
-				tmp._p -= n;
-
-				return (tmp);
-			}
-
-			reverse_iterator			&operator+=( difference_type n )
-			{
-				_p -= n;
-
-				return (*this);
-			}
-
-			reverse_iterator			operator-( const int n )
-			{
-				reverse_iterator	tmp = *this;
+				iterator	tmp = *this;
 
 				tmp._p += n;
 
 				return (tmp);
 			}
 
-			reverse_iterator			&operator-=( difference_type n )
+			iterator					&operator+=( difference_type n )
 			{
 				_p += n;
 
 				return (*this);
 			}
 
-			protected:
+			iterator					operator-( difference_type n ) const
+			{
+				iterator	tmp = *this;
+				tmp._p -= n;
 
-				iterator_type		_p;
+				return (tmp);
+			}
 
+			iterator					&operator-=( difference_type n )
+			{
+				_p -= n;
+
+				return (*this);
+			}
+
+			bool						operator==(const iterator &rhs) const
+			{
+				return (_p == rhs._p);
+			}
+
+			bool						operator!=(const iterator &rhs) const
+			{
+				return (_p != rhs._p);
+			}
+
+		protected:
+	
+			iterator_type				_p;
+	
 	};
+
 }
 
 #endif
