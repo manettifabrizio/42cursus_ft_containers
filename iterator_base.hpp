@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 20:40:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/26 18:15:42 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/01 20:40:54 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,57 +58,57 @@ namespace ft
 		typedef std::random_access_iterator_tag			iterator_category;
 	};
 
-	/*				-|-|-|-|- RELATIONAL OPERATORS -|-|-|-|-				*/
+	// /*				-|-|-|-|- RELATIONAL OPERATORS -|-|-|-|-				*/
 
-	template < class Iter >
-	bool							operator==( const Iter &x, const Iter &y )
-	{
-		return ( x.base() == y.base() );
-	}
+	// template < class Iter >
+	// bool							operator==( const Iter &x, const Iter &y )
+	// {
+	// 	return ( x.base() == y.base() );
+	// }
 	
-	template < class Iter >
-	bool							operator!=( const Iter &x, const Iter &y )
-	{
-		return !( x == y );
-	}
+	// template < class Iter >
+	// bool							operator!=( const Iter &x, const Iter &y )
+	// {
+	// 	return !( x == y );
+	// }
 
-	template < class Iter >
-	bool							operator<( const Iter &x, const Iter &y )
-	{
-		return ( x.base() < y.base() );
-	}
+	// template < class Iter >
+	// bool							operator<( const Iter &x, const Iter &y )
+	// {
+	// 	return ( x.base() < y.base() );
+	// }
 	
-	template < class Iter >
-	bool							operator>( const Iter &x, const Iter &y )
-	{
-		return ( y < x );
-	}
+	// template < class Iter >
+	// bool							operator>( const Iter &x, const Iter &y )
+	// {
+	// 	return ( y < x );
+	// }
 	
-	template < class Iter >
-	bool							operator<=( const Iter &x, const Iter &y )
-	{
-		return !( x > y );
-	}
+	// template < class Iter >
+	// bool							operator<=( const Iter &x, const Iter &y )
+	// {
+	// 	return !( x > y );
+	// }
 	
-	template < class Iter >
-	bool							operator>=( const Iter &x, const Iter &y )
-	{
-		return !( y < x );
-	}
+	// template < class Iter >
+	// bool							operator>=( const Iter &x, const Iter &y )
+	// {
+	// 	return !( y < x );
+	// }
 
-	template < class Iter >
-	Iter							operator+( const Iter &x, const ptrdiff_t n )
-	{
-		x += n;
+	// template < class Iter >
+	// Iter							operator+( const Iter &x, const ptrdiff_t n )
+	// {
+	// 	x += n;
 
-		return ( x );
-	}
+	// 	return ( x );
+	// }
 
-	template < class Iter >
-	ptrdiff_t						operator-( const Iter &x, const Iter &y )
-	{
-		return ( x.base() - y.base() );
-	}
+	// template < class Iter >
+	// ptrdiff_t						operator-( const Iter &x, const Iter &y )
+	// {
+	// 	return ( x.base() - y.base() );
+	// }
 
 }
 

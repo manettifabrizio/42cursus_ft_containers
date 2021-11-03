@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/16 16:29:25 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/27 20:33:23 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/02 17:26:28 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,29 +23,24 @@ namespace ft {
 	*/
 
 	template < class Iter >
-	class reverse_iterator : public iterator<typename Iter::iterator_type>
+	class reverse_iterator
 	{
 
 			/*							MEMBER TYPES							*/
 
-		private:
-
-			typedef iterator_traits<Iter>						it_traits;
-
 		public:
 
 			typedef Iter										iterator_type;
-			typedef typename it_traits::iterator_category		iterator_category;
-			typedef typename it_traits::value_type				value_type;
-			typedef typename it_traits::difference_type			difference_type;
-			typedef typename it_traits::pointer					pointer;
-			typedef typename it_traits::reference				reference;
+			typedef typename Iter::value_type					value_type;
+			typedef typename Iter::difference_type				difference_type;
+			typedef typename Iter::pointer						pointer;
+			typedef typename Iter::reference					reference;
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
-			reverse_iterator( void ) : Iter() { }
+			reverse_iterator( void ) : _p() { }
 
-			explicit reverse_iterator( Iter it ) : _p(it)
+			explicit reverse_iterator( iterator_type it ) : _p(it)
 			{
 			}
 			
@@ -79,7 +74,7 @@ namespace ft {
 
 				--ret;
 
-				return (*ret);
+				return (ret.operator*());
 			}
 
 			pointer						operator->( void ) const
@@ -87,11 +82,9 @@ namespace ft {
 				return (&(operator*()));
 			}
 
-			reference					operator[]( difference_type i ) const
+			reference					operator[]( difference_type i )
 			{
-				*this += i;
-
-				return (*this);
+				return (*operator+(i));
 			}
 
 			/* Increment/Decrement												*/
@@ -132,7 +125,7 @@ namespace ft {
 
 			/* Arithmethic														*/
 
-			reverse_iterator			operator+( const int n )
+			reverse_iterator			operator+( const int n ) const
 			{
 				reverse_iterator	tmp = *this;
 
@@ -141,6 +134,12 @@ namespace ft {
 				return (tmp);
 			}
 
+			friend reverse_iterator		operator+( difference_type n,
+				const reverse_iterator &rhs )
+			{
+				return (rhs.operator+(n));
+			};
+
 			reverse_iterator			&operator+=( difference_type n )
 			{
 				_p -= n;
@@ -148,7 +147,7 @@ namespace ft {
 				return (*this);
 			}
 
-			reverse_iterator			operator-( const int n )
+			reverse_iterator			operator-( difference_type n )
 			{
 				reverse_iterator	tmp = *this;
 
@@ -157,11 +156,56 @@ namespace ft {
 				return (tmp);
 			}
 
+			template < class It >
+			difference_type				operator-( const reverse_iterator<It> &rhs ) const
+			{
+				return (rhs.base().operator-(_p));
+			}
+
+
 			reverse_iterator			&operator-=( difference_type n )
 			{
 				_p += n;
 
 				return (*this);
+			}
+
+			/*						RELATIONAL OPERATORS						*/
+
+			template < class It >
+			bool			operator==(const reverse_iterator<It> &rhs) const
+			{
+				return (_p.operator==(rhs.base()));
+			}
+
+			template < class It >
+			bool			operator!=(const reverse_iterator<It> &rhs) const
+			{
+				return (_p.operator!=(rhs.base()));
+			}
+
+			template < class It >
+			bool			operator<( const reverse_iterator<It> &rhs ) const
+			{
+				return (_p.operator>(rhs.base()));
+			}
+			
+			template < class It >
+			bool			operator>( const reverse_iterator<It> &rhs ) const
+			{
+				return (_p.operator<(rhs.base()));
+			}
+			
+			template < class It >
+			bool			operator<=( const reverse_iterator<It> &rhs ) const
+			{
+				return (_p.operator>=(rhs.base()));
+			}
+			
+			template < class It >
+			bool			operator>=( const reverse_iterator<It> &rhs ) const
+			{
+				return (_p.operator<=(rhs.base()));
 			}
 
 			protected:

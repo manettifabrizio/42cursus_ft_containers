@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/27 20:32:47 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/02 17:37:10 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,16 @@ namespace ft {
 				operator--();
 				
 				return (old);
+			}
+
+			template <typename T, typename node_type> template <class U>
+			bool	mapIte<T, node_type>::operator==(const mapIte<U, node_type> &rhs) const {
+				return (this->_node == rhs._node);
+			}
+
+			template <typename T, typename node_type> template <class U>
+			bool	mapIte<T, node_type>::operator!=(const mapIte<U, node_type> &rhs) const {
+				return (this->_node != rhs._node);
 			}
 
 		protected:

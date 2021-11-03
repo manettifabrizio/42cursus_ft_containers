@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 00:23:38 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/28 00:23:56 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/02 14:45:32 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ namespace ft
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_pointer		const_pointer;
-			typedef	ft::iterator<pointer>						iterator;
-			typedef ft::iterator<const_pointer>					const_iterator;
+			typedef	ft::iterator<value_type>					iterator;
+			typedef ft::const_iterator<value_type>				const_iterator;
 			typedef ft::reverse_iterator<iterator>				reverse_iterator;
 			typedef	ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 			typedef	ptrdiff_t									difference_type;
@@ -96,9 +96,9 @@ namespace ft
 
 			void						destroy_array( void )
 			{
-				if (_size)
-					for (iterator it = begin(); it != end(); ++it)
-						_all.destroy(it.base());
+				// if (_size)
+				// 	for (iterator it = begin(); it != end(); ++it)
+				// 		_all.destroy(it.base());
 				if (_array)
 				{
 					_all.deallocate(_array, _size);
@@ -424,6 +424,7 @@ namespace ft
 				}
 				else
 					_all.construct(&(_array[_size]), val);
+
 				_size++;
 			}
 
@@ -434,9 +435,7 @@ namespace ft
 			{
 				if (_size > 0)
 				{
-					iterator	it = end() - 1;
-
-					_all.destroy(it.base());
+					_all.destroy(&(_array[_size - 1]));
 					_size--;
 				}
 			}
@@ -450,21 +449,18 @@ namespace ft
 			{
 				if (position != end())
 				{
-					int	x = 0;
-
-					for (iterator it = begin(); it != position; it++)
-						x++;
+					size_type	pos = position - begin();
 
 					reserve(_size + 1);
 
 					iterator it = end();
 
-					position = begin() + x;
+					position = begin() + pos;
 
 					for (; it != position; --it)
-						_all.construct(it.base(), *(it - 1));
+						*it = *(it - 1);
 
-					_all.construct(position.base(), val);
+					_all.construct(&_array[pos], val);
 
 					_size++;
 
@@ -480,7 +476,10 @@ namespace ft
 				size_type n, const value_type &val )
 			{
 				while (n--)
+				{
 					position = insert(position, val);
+					position++;
+				}
 			}
 
 			template < class InputIterator >
@@ -517,7 +516,7 @@ namespace ft
 			{
 				size_type	pos = position - begin();
 
-				_all.destroy(position.base());
+				_all.destroy(&(_array[pos]));
 
 				_size--;
 
@@ -530,19 +529,17 @@ namespace ft
 			iterator				erase( iterator first, iterator last )
 			{
 				size_type	pos = first - begin();
+				size_type	len = last - first;
 
-				size_type	n = 0;
-
-				for (iterator it = first; it != last; it++)
-					n++;
-
-				_size -= n;
+				int i = pos;
 
 				for (iterator it = first; it != last; ++it)
-					_all.destroy(it.base());
+					_all.destroy(&_array[i++]);
 
 				for (iterator it = first; it != end(); ++it)
-					*it = *(it + n);
+					*it = *(it + len);
+
+				_size -= len;
 
 				return (begin() + pos);
 			}
@@ -579,8 +576,8 @@ namespace ft
 				leaving the container with a size of 0.							*/
 			void					clear( void )
 			{
-				for (iterator it = begin(); it != end(); ++it)
-					_all.destroy(it.base());
+				for (size_type i = 0; i < _size; i++)
+					_all.destroy(&(_array[i]));
 
 				_size = 0;
 			}

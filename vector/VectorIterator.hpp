@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 21:05:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/27 20:33:12 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/02 16:54:26 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,57 +14,40 @@
 # define VECTORITERATOR_HPP
 
 #include "../iterator_base.hpp"
+#include "RandomAccessIterator.hpp"
 
 namespace ft {
 
-	/*	Random Access Iterator class template
-		Random-access iterators are iterators that can be used to access
-		elements at an arbitrary offset position relative to the element
-		they point to, offering the same functionality as pointers.
-	*/
-
-	template < typename Iter >
-	class iterator
+	template < typename T >
+	class iterator : public random_access_iterator<T>
 	{
 
 			/*							MEMBER TYPES							*/
 
 		private:
 
-			typedef iterator_traits<Iter>						it_traits;
+			typedef random_access_iterator<T>				rit;
 
 		public:
 
-			typedef Iter										iterator_type;
-			typedef typename it_traits::iterator_category		iterator_category;
-			typedef typename it_traits::value_type				value_type;
-			typedef typename it_traits::difference_type			difference_type;
-			typedef typename it_traits::pointer					pointer;
-			typedef typename it_traits::reference				reference;
-
-			// Operator to pass from non-cont to const and vice-versa
-			operator iterator<value_type const*>() const
-			{
-					return iterator<value_type const *>(_p);
-			}
+			typedef T										value_type;
+			typedef ptrdiff_t								difference_type;
+			typedef T*										pointer;
+			typedef T&										reference;
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
-			iterator( void ) : _p(NULL) { }
+			iterator( void ) : rit() { }
 
-			iterator( Iter it ) : _p(it) { }
+			iterator( pointer it ) : rit(it) { }
 
-			iterator( const iterator &src )
-			{
-				_p = src._p;
-			}
+		private:
 
-			~iterator( void ) { }
-	
-			iterator_type				base( void ) const
-			{
-				return (_p);
-			}
+			iterator( rit const &src ) : rit(src) { }
+
+		public:
+ 
+			// virtual ~iterator( void ) { }
 
 			/*						OPERATORS OVERLOAD							*/
 
@@ -72,17 +55,17 @@ namespace ft {
 
 			reference					operator*( void ) const
 			{
-				return (*_p);
+				return (*this->_p);
 			}
 
-			iterator_type				operator->( void ) const
+			pointer						operator->( void ) const
 			{
-				return (_p);
+				return (this->_p);
 			}
 
 			reference					operator[]( difference_type i ) const
 			{
-				return (_p[i]);
+				return (this->_p[i]);
 			}
 
 			/* Increment/Decrement												*/
@@ -90,24 +73,21 @@ namespace ft {
 			// prefix 
 			iterator					&operator++( void )
 			{
-				++_p;
+				rit::operator++();
 
 				return (*this);
 			}
 		
 			// postfix
 			iterator					operator++( int )
-			{
-				iterator old = *this;
-				operator++();
-				
-				return (old);
+			{	
+				return (rit::operator++(0));
 			}
 		
 			// prefix
 			iterator					&operator--( void )
 			{
-				--_p;
+				rit::operator--();
 
 				return (*this);
 			}
@@ -115,59 +95,179 @@ namespace ft {
 			// postfix
 			iterator					operator--( int )
 			{
-				iterator old = *this;
-				operator--();
-				
-				return (old);
+				return (rit::operator--(0));
 			}
 
 			/* Arithmethic														*/
 
 			iterator					operator+( difference_type n ) const
 			{
-				iterator	tmp = *this;
+				return (rit::operator+(n));
+			}
 
-				tmp._p += n;
+			// iterator					operator+( const iterator &rhs ) const
+			// {
+			// 	iterator	tmp = *this;
 
-				return (tmp);
+			// 	tmp._p += rhs._p;
+
+			// 	return (tmp);
+			// }
+
+			friend iterator				operator+( difference_type n,
+				const iterator &rhs)
+			{
+				return (rhs.operator+(n));
+			};
+
+			iterator					operator-( difference_type n ) const
+			{
+				return (rit::operator-(n));
+			}
+
+			difference_type				operator-( const rit &rhs ) const
+			{
+				return (rit::operator-(rhs));
 			}
 
 			iterator					&operator+=( difference_type n )
 			{
-				_p += n;
+				this->_p += n;
 
 				return (*this);
-			}
-
-			iterator					operator-( difference_type n ) const
-			{
-				iterator	tmp = *this;
-				tmp._p -= n;
-
-				return (tmp);
 			}
 
 			iterator					&operator-=( difference_type n )
 			{
-				_p -= n;
+				this->_p -= n;
 
 				return (*this);
 			}
 
-			bool						operator==(const iterator &rhs) const
+	};
+
+		template < typename T >
+	class const_iterator : public random_access_iterator<T>
+	{
+
+			/*							MEMBER TYPES							*/
+
+		private:
+
+			typedef random_access_iterator<T>				rit;
+
+		public:
+
+			typedef T										value_type;
+			typedef ptrdiff_t								difference_type;
+			typedef const T*								pointer;
+			typedef const T&								reference;
+
+			/*					CONSTRUCTORS AND DESTRUCTOR						*/
+
+			const_iterator( void ) : rit() { }
+
+			const_iterator( value_type *it ) : rit(it) { }
+
+			const_iterator( rit const &src ) : rit(src) { }
+
+			// virtual ~const_iterator( void ) { }
+
+			/*						OPERATORS OVERLOAD							*/
+
+			/* Dereference														*/
+
+			reference					operator*( void ) const
 			{
-				return (_p == rhs._p);
+				return (*this->_p);
 			}
 
-			bool						operator!=(const iterator &rhs) const
+			pointer						operator->( void ) const
 			{
-				return (_p != rhs._p);
+				return (this->_p);
 			}
 
-		protected:
-	
-			iterator_type				_p;
-	
+			reference					operator[]( difference_type i ) const
+			{
+				return (this->_p[i]);
+			}
+
+			/* Increment/Decrement												*/
+			
+			// prefix 
+			const_iterator				&operator++( void )
+			{
+				rit::operator++();
+
+				return (*this);
+			}
+		
+			// postfix
+			const_iterator				operator++( int )
+			{	
+				return (rit::operator++(0));
+			}
+		
+			// prefix
+			const_iterator				&operator--( void )
+			{
+				rit::operator--();
+
+				return (*this);
+			}
+		
+			// postfix
+			const_iterator				operator--( int )
+			{
+				return (rit::operator--(0));
+			}
+
+			/* Arithmethic														*/
+
+			const_iterator				operator+( difference_type n ) const
+			{
+				return (rit::operator+(n));
+			}
+
+			// const_iterator			operator+( const const_iterator &rhs ) const
+			// {
+			// 	const_iterator	tmp = *this;
+
+			// 	tmp._p += rhs._p;
+
+			// 	return (tmp);
+			// }
+
+			friend const_iterator		operator+( difference_type n,
+				const const_iterator &rhs)
+			{
+				return (rhs.operator+(n));
+			};
+
+			const_iterator				operator-( difference_type n ) const
+			{
+				return (rit::operator-(n));
+			}
+
+			difference_type				operator-( const rit &rhs ) const
+			{
+				return (rit::operator-(rhs));
+			}
+
+			const_iterator				&operator+=( difference_type n )
+			{
+				this->_p += n;
+
+				return (*this);
+			}
+
+			const_iterator				&operator-=( difference_type n )
+			{
+				this->_p -= n;
+
+				return (*this);
+			}
+
 	};
 
 }
