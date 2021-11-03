@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 17:26:26 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/27 20:32:57 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/03 14:54:38 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ namespace ft {
 			typedef typename Iter::difference_type			difference_type;
 			typedef typename Iter::pointer					pointer;
 			typedef typename Iter::reference				reference;
-			typedef typename Iter::iterator_category		iterator_category;
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 

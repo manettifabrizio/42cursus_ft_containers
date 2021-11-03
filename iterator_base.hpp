@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 20:40:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/11/01 20:40:54 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/03 18:14:35 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,57 +58,39 @@ namespace ft
 		typedef std::random_access_iterator_tag			iterator_category;
 	};
 
-	// /*				-|-|-|-|- RELATIONAL OPERATORS -|-|-|-|-				*/
+	/*			-|-|-|-|- ALGORYTHMS FOR RELATIONAL OPERATORS -|-|-|-|-			*/
 
-	// template < class Iter >
-	// bool							operator==( const Iter &x, const Iter &y )
-	// {
-	// 	return ( x.base() == y.base() );
-	// }
-	
-	// template < class Iter >
-	// bool							operator!=( const Iter &x, const Iter &y )
-	// {
-	// 	return !( x == y );
-	// }
+	template <class InputIterator1, class InputIterator2>
+	bool 					equal ( InputIterator1 first1, InputIterator1 last1,
+		InputIterator2 first2 )
+	{
+		while (first1 != last1)
+		{
+			if (*first1 != *first2)
+				return (false);
+			++first1;
+			++first2;
+		}
 
-	// template < class Iter >
-	// bool							operator<( const Iter &x, const Iter &y )
-	// {
-	// 	return ( x.base() < y.base() );
-	// }
-	
-	// template < class Iter >
-	// bool							operator>( const Iter &x, const Iter &y )
-	// {
-	// 	return ( y < x );
-	// }
-	
-	// template < class Iter >
-	// bool							operator<=( const Iter &x, const Iter &y )
-	// {
-	// 	return !( x > y );
-	// }
-	
-	// template < class Iter >
-	// bool							operator>=( const Iter &x, const Iter &y )
-	// {
-	// 	return !( y < x );
-	// }
+		return (true);
+	}
 
-	// template < class Iter >
-	// Iter							operator+( const Iter &x, const ptrdiff_t n )
-	// {
-	// 	x += n;
+	template <class InputIterator1, class InputIterator2>
+  	bool					lexicographical_compare( InputIterator1 first1,
+		InputIterator1 last1, InputIterator2 first2, InputIterator2 last2 )
+	{
+		while (first1 != last1)
+		{
+			if (first2 == last2 || *first2 < *first1)
+				return (false);
+			else if (*first1 < *first2)
+				return (true);
+			++first1;
+			++first2;
+		}
 
-	// 	return ( x );
-	// }
-
-	// template < class Iter >
-	// ptrdiff_t						operator-( const Iter &x, const Iter &y )
-	// {
-	// 	return ( x.base() - y.base() );
-	// }
+		return (first2 != last2);
+	}
 
 }
 

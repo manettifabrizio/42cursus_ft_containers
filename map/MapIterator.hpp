@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 19:12:11 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/11/02 17:37:10 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/03 15:17:06 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,16 @@ namespace ft {
 	*/
 
 	template <	class T,
-				class Node,
-				class Category = std::bidirectional_iterator_tag,
-				class Distance = ptrdiff_t,
-				class Pointer = T*,
-				class Reference = T& >
+				class Node >
 	class map_iterator
 	{
 		public:
 
 			typedef T											value_type;
 			typedef Node*										node_pointer;
-			typedef Distance									difference_type;
-			typedef Pointer										pointer;
-			typedef Reference									reference;
-			typedef Category									iterator_category;
+			typedef ptrdiff_t									difference_type;
+			typedef T*											pointer;
+			typedef T&											reference;
 
 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
@@ -56,6 +51,11 @@ namespace ft {
 			node_pointer				base( void ) const
 			{
 				return (node);
+			}
+
+			operator map_iterator<const T, Node>(void) const
+			{
+				return (map_iterator<const T, Node>(node));
 			}
 
 			/*						OPERATORS OVERLOAD							*/
@@ -152,14 +152,16 @@ namespace ft {
 				return (old);
 			}
 
-			template <typename T, typename node_type> template <class U>
-			bool	mapIte<T, node_type>::operator==(const mapIte<U, node_type> &rhs) const {
-				return (this->_node == rhs._node);
+			/*						RELATIONAL OPERATORS						*/
+
+			bool						operator==(const map_iterator &rhs) const
+			{
+				return (node == rhs.node);
 			}
 
-			template <typename T, typename node_type> template <class U>
-			bool	mapIte<T, node_type>::operator!=(const mapIte<U, node_type> &rhs) const {
-				return (this->_node != rhs._node);
+			bool						operator!=(const map_iterator &rhs) const
+			{
+				return (node != rhs.node);
 			}
 
 		protected:
@@ -168,143 +170,143 @@ namespace ft {
 	
 	};
 
-	/*	Bidirectional Iterator const class template
-		Bidirectional iterators are iterators that can be used to access the
-		sequence of elements in a range in both directions (towards the end
-		and towards the beginning).
-	*/
+// 	/*	Bidirectional Iterator const class template
+// 		Bidirectional iterators are iterators that can be used to access the
+// 		sequence of elements in a range in both directions (towards the end
+// 		and towards the beginning).
+// 	*/
 
-	template <	class T,
-				class Node,
-				class Category = std::bidirectional_iterator_tag,
-				class Distance = ptrdiff_t,
-				class Pointer = T*,
-				class Reference = T& >
-	class const_map_iterator
-	{
+// 	template <	class T,
+// 				class Node,
+// 				class Category = std::bidirectional_iterator_tag,
+// 				class Distance = ptrdiff_t,
+// 				class Pointer = T*,
+// 				class Reference = T& >
+// 	class const_map_iterator
+// 	{
 
-		typedef T											value_type;
-		typedef Node*	                                    node_pointer;
-		typedef Distance									difference_type;
-		typedef const Pointer								pointer;
-		typedef const Reference								reference;
-		typedef Category									iterator_category;
+// 		typedef T											value_type;
+// 		typedef Node*	                                    node_pointer;
+// 		typedef Distance									difference_type;
+// 		typedef const Pointer								pointer;
+// 		typedef const Reference								reference;
+// 		typedef Category									iterator_category;
 
-		public:
+// 		public:
 
-			/*					CONSTRUCTORS AND DESTRUCTOR						*/
+// 			/*					CONSTRUCTORS AND DESTRUCTOR						*/
 
-			const_map_iterator( void ) : node(NULL) { }
+// 			const_map_iterator( void ) : node(NULL) { }
 
-			const_map_iterator( node_pointer it ) : node(it) { }
+// 			const_map_iterator( node_pointer it ) : node(it) { }
 
-			const_map_iterator( const const_map_iterator &src )
-			{
-				node = src.node;
-			}
+// 			const_map_iterator( const const_map_iterator &src )
+// 			{
+// 				node = src.node;
+// 			}
 
-			~const_map_iterator( void ) { }
+// 			~const_map_iterator( void ) { }
 
-			node_pointer				base( void ) const
-			{
-				return (node);
-			}
+// 			node_pointer				base( void ) const
+// 			{
+// 				return (node);
+// 			}
 
-			/*						OPERATORS OVERLOAD							*/
+// 			/*						OPERATORS OVERLOAD							*/
 
-			/* Dereference														*/
+// 			/* Dereference														*/
 
-			reference					operator*( void ) const
-			{
-				return (*(node->data));
-			}
+// 			reference					operator*( void ) const
+// 			{
+// 				return (*(node->data));
+// 			}
 
-			pointer						operator->( void ) const
-			{
-				return (node->data);
-			}
+// 			pointer						operator->( void ) const
+// 			{
+// 				return (node->data);
+// 			}
 
-			/* Increment/Decrement												*/
+// 			/* Increment/Decrement												*/
 			
-			// prefix 
-			const_map_iterator				&operator++( void )
-			{
-				//	Down to the right and left as possible
-				if (node->right != NULL)
-					{
-						node = node->right;
+// 			// prefix 
+// 			const_map_iterator				&operator++( void )
+// 			{
+// 				//	Down to the right and left as possible
+// 				if (node->right != NULL)
+// 					{
+// 						node = node->right;
 
-						while (node->left != NULL)
-							node = node->left;
-					}
-				// Move up the tree until we have moved over a
-				// left child link
-				else
-				{
-					node_pointer p = node->parent;
-					while (p != NULL && node == p->right)
-					{
-						node = p;
-						p = p->parent;
-					}
+// 						while (node->left != NULL)
+// 							node = node->left;
+// 					}
+// 				// Move up the tree until we have moved over a
+// 				// left child link
+// 				else
+// 				{
+// 					node_pointer p = node->parent;
+// 					while (p != NULL && node == p->right)
+// 					{
+// 						node = p;
+// 						p = p->parent;
+// 					}
 
-					node = p;
-				}
+// 					node = p;
+// 				}
 
-				return (*this);
-			}
+// 				return (*this);
+// 			}
 		
-			// postfix
-			const_map_iterator				operator++( int )
-			{
-				const_map_iterator old = *this;
-				operator++();
+// 			// postfix
+// 			const_map_iterator				operator++( int )
+// 			{
+// 				const_map_iterator old = *this;
+// 				operator++();
 				
-				return (old);
-			}
+// 				return (old);
+// 			}
 		
-			// prefix
-			const_map_iterator				&operator--( void )
-			{
-				//	One to the left and downode to right as possible
-				if (node->left != NULL)
-				{
-					node = node->left;
+// 			// prefix
+// 			const_map_iterator				&operator--( void )
+// 			{
+// 				//	One to the left and downode to right as possible
+// 				if (node->left != NULL)
+// 				{
+// 					node = node->left;
 
-					while (node->right != NULL)
-						node = node->right;
-				}
-				// Move up the tree until we have moved over a
-				// right child link
-				else
-				{
-					node_pointer p = node->parent;
-					while (p != NULL && node == p->left)
-					{
-						node = p;
-						p = p->parent;
-					}
+// 					while (node->right != NULL)
+// 						node = node->right;
+// 				}
+// 				// Move up the tree until we have moved over a
+// 				// right child link
+// 				else
+// 				{
+// 					node_pointer p = node->parent;
+// 					while (p != NULL && node == p->left)
+// 					{
+// 						node = p;
+// 						p = p->parent;
+// 					}
 
-					node = p;
-				}
+// 					node = p;
+// 				}
 
-				return (*this);
-			}
+// 				return (*this);
+// 			}
 		
-			// postfix
-			const_map_iterator			operator--( int )
-			{
-				const_map_iterator old = *this;
-				operator--();
+// 			// postfix
+// 			const_map_iterator			operator--( int )
+// 			{
+// 				const_map_iterator old = *this;
+// 				operator--();
 				
-				return (old);
-			}
+// 				return (old);
+// 			}
 
-		protected:
+// 		protected:
 	
-			node_pointer				node;
+// 			node_pointer				node;
 	
-	};
+// 	};
 
 }
 

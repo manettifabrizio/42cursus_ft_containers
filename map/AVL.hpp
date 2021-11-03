@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 17:04:34 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/27 20:32:38 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/03 21:50:17 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define AVL_HPP
 
 #include "MapIterator.hpp"
-#include "MapReverseIterator.hpp"
+#include "../ReverseIterator.hpp"
 #include "utility.hpp"
 
 namespace ft
@@ -52,9 +52,9 @@ namespace ft
 			typedef typename allocator_type::size_type					size_type;
 			typedef typename allocator_type::difference_type			difference_type;
 			typedef typename ft::map_iterator<T, tree_node<T> >			iterator;
-			typedef typename ft::const_map_iterator<T, tree_node<T> >	const_iterator;
-			typedef typename ft::map_reverse_iterator<iterator>			reverse_iterator;
-			typedef typename ft::map_reverse_iterator<const_iterator>	const_reverse_iterator;
+			typedef typename ft::map_iterator<const T, tree_node<T> >	const_iterator;
+			typedef typename ft::reverse_iterator<iterator>				reverse_iterator;
+			typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 
 
 		private:
@@ -171,6 +171,8 @@ namespace ft
 						n->parent->right = tmp;
 				}
 				n->right = tmp->left;		//	A->right = B->left
+				if (tmp->left)
+					tmp->left->parent = n;
 				n->parent = tmp;
 				tmp->left = n;				//	B->left = A;
 
@@ -191,6 +193,8 @@ namespace ft
 						n->parent->right = tmp;
 				}
 				n->left = tmp->right;		//	C->left = B->right
+				if (tmp->right)
+					tmp->right->parent = n;
 				n->parent = tmp;			 
 				tmp->right = n;				//	B->right = C;
 
@@ -294,9 +298,10 @@ namespace ft
 			/*	First (Default constructor)
 				Empty tree, root is NULL.											*/
 			AVLtree( const value_compare& comp = value_compare(),
-				const allocator_type& alloc = allocator_type() ) : _root(NULL),
-				_end(NULL), _size(0), _comp(comp), _all(alloc)
+				const allocator_type& alloc = allocator_type() ) : _end(newNode()),
+				_size(0), _comp(comp), _all(alloc)
 			{
+				_root = _end;
 			}
 
 			/*	Second (Range constructor)
@@ -307,7 +312,7 @@ namespace ft
 			AVLtree( InputIterator first, InputIterator last,
 				const value_compare& comp = value_compare(),
 				const allocator_type& alloc = allocator_type() ) : _root(NULL),
-				_end(NULL), _size(last - first), _comp(comp), _all(alloc)
+				_end(newNode()), _size(0), _comp(comp), _all(alloc)
 			{
 				for (; first != last; ++first)
 					insert(*first);
@@ -316,7 +321,7 @@ namespace ft
 			/*	Third (Copy constructor)
 				Constructs a container with a copy of each of the elements
 				in x.																*/
-			AVLtree( const AVLtree &x ) : _root(NULL), _end(NULL), _size(0),
+			AVLtree( const AVLtree &x ) : _root(NULL), _end(newNode()), _size(0),
 				_comp(x._comp), _all(x._all), _all_node(x._all_node)
 			{
 				insert(x.begin(), x.end());
@@ -366,16 +371,8 @@ namespace ft
 				in the map container.												*/
 			iterator					end( void )
 			{
-				if (_size)
+				if (_end && _size)
 				{
-					if (!_end)
-					{
-						_end = _all_node.allocate(1);
-						_end->data = NULL;
-
-						_end->left = NULL;
-						_end->right = NULL;
-					}
 					_end->parent = rightMostNode(_root);
 					rightMostNode(_root)->right = _end;
 				}
@@ -393,7 +390,7 @@ namespace ft
 				the container (i.e., its reverse beginning).						*/
 			reverse_iterator 			rbegin( void )
 			{
-				if (!_root)
+				if (!_root || _root == _end)
 					return ( reverse_iterator(iterator(NULL)) );
 
 				return ( reverse_iterator(end()) );
@@ -401,7 +398,7 @@ namespace ft
 
 			const_reverse_iterator 		rbegin( void ) const
 			{
-				if (!_root)
+				if (!_root || _root == _end)
 					return ( const_reverse_iterator(iterator(NULL)) );
 
 				return ( const_reverse_iterator(end()) );
@@ -413,7 +410,7 @@ namespace ft
 				(which is considered its reverse end).								*/	
 			reverse_iterator			rend( void )
 			{
-				if (!_root)
+				if (!_root || _root == _end)
 					return ( reverse_iterator(iterator(NULL)) );
 
 				return ( reverse_iterator(begin()) );
@@ -421,7 +418,7 @@ namespace ft
 
 			const_reverse_iterator		rend( void ) const
 			{
-				if (!_root)
+				if (!_root || _root == _end)
 					return ( reverse_iterator( iterator(NULL)) );
 				
 				return ( const_reverse_iterator(begin()) );
@@ -447,7 +444,7 @@ namespace ft
 				Returns the maximum number of elements that the tree can hold.		*/
 			size_type			max_size( void ) const
 			{
-				return ( _all.max_size() );
+				return ( _all.max_size() / 2 );
 			}
 
 			/*					-|-|-|-|-  MODIFIERS -|-|-|-|-						*/
@@ -459,14 +456,14 @@ namespace ft
 			{
 				
 				// Tree root doesn't exist
-				if (!_root)
+				if (!_root || _root == _end )
 				{
 					_root = newNode(NULL, val);
 					_size++;
+					end();
 					return (ft::make_pair<iterator,bool>(iterator(_root), true));
 				}
 
-				// Da capire perché const_iterator -> iterator non converte e segfaulta
 				ft::pair<iterator, bool>		p = check_key(val.first);
 
 				//	Key found
@@ -565,7 +562,6 @@ namespace ft
 				// Two childs case
 				else
 				{
-					// Root case to do
 					if (!prev)
 					{
 						curr = rightMostNode(curr->left);
@@ -574,25 +570,22 @@ namespace ft
 						curr->data = NULL;
 						erase(iterator(curr));
 					}
-					else if (prev && prev->left == curr)
+					else
 					{
-						prev->left = curr->left;
-						prev->left->right = curr->right;
-						delete_node(curr);
-						prev->left->parent = prev;
-						prev->left->right->parent = prev->left;
-					}
-					else if (prev && prev->right == curr)
-					{
-						prev->right = curr->left;
-						prev->right->right = curr->right;
-						delete_node(curr);
-						prev->right->parent = prev;
-						prev->right->right->parent = prev->right;
+						node *tmp = curr;
+
+						curr = rightMostNode(curr->left);
+						_all.deallocate(tmp->data, 1);
+						tmp->data = curr->data;
+						curr->data = NULL;
+						erase(iterator(curr));
 					}
 				}
 
 				check_balance(begin().base());
+
+				// Update end()
+				end();
 			}
 
 			template < typename Key >
@@ -613,6 +606,9 @@ namespace ft
 			{
 				iterator	tmp;
 
+				if (!_root || _root == _end)
+					return ;
+
 				while (first != last)
 				{
 					tmp = first++;
@@ -625,10 +621,34 @@ namespace ft
 				which is another map of the same type. Sizes may differ.			*/
 			void						swap( AVLtree &x )
 			{
-				AVLtree		tmp(x);
+				node			*tmp_node;
+				size_type 		tmp;
+				Compare			tmp_comp = x._comp;
+				allocator_type	tmp_all;
+				allocator_node	tmp_all_node;
 
-				x = *this;
-				*this = tmp;
+				tmp = x.size();
+				x._size = _size;
+				_size = tmp;
+
+				tmp_node = x._root;
+				x._root = _root;
+				_root = tmp_node;
+
+				tmp_node = x._end;
+				x._end = _end;
+				_end = tmp_node;
+
+				x._comp = _comp;
+				_comp = tmp_comp;
+
+				tmp_all = x._all;
+				x._all = _all;
+				_all = tmp_all;
+
+				tmp_all_node = x._all_node;
+				x._all_node = _all_node;
+				_all_node = tmp_all_node;
 			}
 
 			/*	clear()
@@ -655,8 +675,6 @@ namespace ft
 				for (it = begin(); it != end(); ++it)
 					if (it->first == k)
 						return (it);
-
-				// std::cout << "find" << std::endl;
 
 				return (it);
 			}

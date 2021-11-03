@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 00:23:38 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/11/02 14:45:32 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/03 21:59:47 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <stdexcept>
 
 #include "vector/VectorIterator.hpp"
-#include "vector/VectorReverseIterator.hpp"
+#include "ReverseIterator.hpp"
 #include "vector/type_traits.hpp"
 
 namespace ft
@@ -96,9 +96,6 @@ namespace ft
 
 			void						destroy_array( void )
 			{
-				// if (_size)
-				// 	for (iterator it = begin(); it != end(); ++it)
-				// 		_all.destroy(it.base());
 				if (_array)
 				{
 					_all.deallocate(_array, _size);
@@ -605,40 +602,6 @@ namespace ft
 
 		x = y;
 		y = tmp;
-	}
-
-	/*			-|-|-|-|- ALGORYTHMS FOR RELATIONAL OPERATORS -|-|-|-|-			*/
-
-	template <class InputIterator1, class InputIterator2>
-	bool 					equal ( InputIterator1 first1, InputIterator1 last1,
-		InputIterator2 first2 )
-	{
-		while (first1 != last1)
-		{
-			if (*first1 != *first2)
-				return (false);
-			++first1;
-			++first2;
-		}
-
-		return (true);
-	}
-
-	template <class InputIterator1, class InputIterator2>
-  	bool					lexicographical_compare( InputIterator1 first1,
-		InputIterator1 last1, InputIterator2 first2, InputIterator2 last2 )
-	{
-		while (first1 != last1)
-		{
-			if (first2 == last2 || *first2 < *first1)
-				return (false);
-			else if (*first1 < *first2)
-				return (true);
-			++first1;
-			++first2;
-		}
-
-		return (first2 != last2);
 	}
 
 	/*				-|-|-|-|- RELATIONAL OPERATORS -|-|-|-|-					*/
