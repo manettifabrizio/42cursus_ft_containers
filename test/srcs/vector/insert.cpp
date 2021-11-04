@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/18 00:19:24 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/10/25 12:22:24 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/04 16:08:52 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,12 @@ void		_int()
 
 void		_string()
 {
-	TESTED_NAMESPACE::vector<std::string> myvector (3, "ciao");
+	TESTED_NAMESPACE::vector<std::string> myvector;
 	TESTED_NAMESPACE::vector<std::string>::iterator it;
+
+	myvector.push_back("ciao");
+	myvector.push_back("come");
+	myvector.push_back("va");
 
 	display(myvector, "myvector");
 

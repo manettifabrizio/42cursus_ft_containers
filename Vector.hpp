@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 00:23:38 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/11/03 21:59:47 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/04 16:28:47 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -450,18 +450,14 @@ namespace ft
 
 					reserve(_size + 1);
 
-					iterator it = end();
-
-					position = begin() + pos;
-
-					for (; it != position; --it)
-						*it = *(it - 1);
+					for (size_type i = _size; i > pos; i--)
+						_all.construct(&_array[i], _array[i - 1]);
 
 					_all.construct(&_array[pos], val);
 
 					_size++;
 
-					return ( position );
+					return ( begin() + pos );
 				}
 				else
 					push_back(val);
@@ -533,8 +529,8 @@ namespace ft
 				for (iterator it = first; it != last; ++it)
 					_all.destroy(&_array[i++]);
 
-				for (iterator it = first; it != end(); ++it)
-					*it = *(it + len);
+				for (size_type i = pos; (i - pos) < (_size - len); ++i)
+					_all.construct(&_array[i], _array[i + len]);
 
 				_size -= len;
 

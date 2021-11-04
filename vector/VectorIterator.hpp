@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 21:05:52 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/11/02 16:54:26 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/04 16:39:02 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,6 @@ namespace ft {
 				return (rit::operator+(n));
 			}
 
-			// iterator					operator+( const iterator &rhs ) const
-			// {
-			// 	iterator	tmp = *this;
-
-			// 	tmp._p += rhs._p;
-
-			// 	return (tmp);
-			// }
-
 			friend iterator				operator+( difference_type n,
 				const iterator &rhs)
 			{
@@ -171,8 +162,6 @@ namespace ft {
 
 			const_iterator( rit const &src ) : rit(src) { }
 
-			// virtual ~const_iterator( void ) { }
-
 			/*						OPERATORS OVERLOAD							*/
 
 			/* Dereference														*/
@@ -228,15 +217,6 @@ namespace ft {
 			{
 				return (rit::operator+(n));
 			}
-
-			// const_iterator			operator+( const const_iterator &rhs ) const
-			// {
-			// 	const_iterator	tmp = *this;
-
-			// 	tmp._p += rhs._p;
-
-			// 	return (tmp);
-			// }
 
 			friend const_iterator		operator+( difference_type n,
 				const const_iterator &rhs)
