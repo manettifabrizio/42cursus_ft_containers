@@ -6,7 +6,7 @@
 /*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 00:22:48 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/11/03 21:13:52 by fmanetti         ###   ########.fr       */
+/*   Updated: 2021/11/10 21:58:54 by fmanetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ namespace ft
 			typedef typename allocator_type::const_reference					const_reference;
 			typedef typename allocator_type::pointer							pointer;
 			typedef typename allocator_type::const_pointer						const_pointer;
-			typedef	map_iterator<value_type, tree_node<value_type> >			iterator;
+			typedef	ft::map_iterator<value_type, tree_node<value_type> >		iterator;
 			typedef ft::map_iterator<const value_type, tree_node<value_type> >	const_iterator;
 			typedef ft::reverse_iterator<iterator>								reverse_iterator;
 			typedef	ft::reverse_iterator<const_iterator>						const_reverse_iterator;
