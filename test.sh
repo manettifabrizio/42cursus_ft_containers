@@ -11,6 +11,26 @@ LOG_FOLDER="$TESTER_FOLDER/logs"
 DIFF_FOLDER="$TESTER_FOLDER/diff"
 EXEC_FOLDER="$TESTER_FOLDER/tmp"
 
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+RESET="\033[0m"
+
+display_figlet ()
+{
+	printf "$GREEN"
+	printf "    ______                       __        _                      \n"
+	printf "   / __/ /_    _________  ____  / /_____ _(_)___  ___  __________ \n"
+	printf "  / /_/ __/   / ___/ __ \/ __ \/ __/ __ '/ / __ \/ _ \/ ___/ ___/ \n"
+	printf " / __/ /_    / /__/ /_/ / / / / /_/ /_/ / / / / /  __/ /  (__  )  \n"
+	printf "/_/  \__/____\___/\____/_/ /_/\__/\__,_/_/_/ /_/\___/_/  /____/   \n"
+	printf "       /_____/                                                    \n"
+	printf "$RESET"
+	printf " ___         __                     _   _   _  \n"
+	printf "| _ )_  _   / _|_ __  __ _ _ _  ___| |_| |_(_) \n"
+	printf "| _ \ || | |  _| '  \/ _' | ' \/ -_)  _|  _| | \n"
+	printf "|___/\_, | |_| |_|_|_\__,_|_||_\___|\__|\__|_| \n"
+	printf "     |__/                                      \n"
+}
 
 compile ()
 {
@@ -95,6 +115,9 @@ test () {
 mkdir $EXEC_FOLDER $LOG_FOLDER $DIFF_FOLDER &> /dev/null
 
 if [ $# -eq 0 ]; then
+
+	display_figlet
+
 	containers=(vector map stack)
 
 	for container in ${containers[@]}; do
@@ -103,11 +126,13 @@ if [ $# -eq 0 ]; then
 	done
 else
 	if [ $1 = "-o" ]; then
+		display_figlet
 		container=$2
 		test $3
 	elif [ $1 = "-c" ]; then
 		rm -rf $DIFF_FOLDER/*.diff $LOG_FOLDER/*.log $EXEC_FOLDER/*.dSYM *.dSYM .vscode a.out
 	else
+		display_figlet
 		containers=($@);
 
 		for container in ${containers[@]}; do
