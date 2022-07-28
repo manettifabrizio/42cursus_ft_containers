@@ -1,46 +1,42 @@
-# ft_containers ✅
+<h1 align="center">
+	ft_containers 
+</h1>
 
-- 42cursus - 2021 - Version 3
-- Author = fmanetti
-- Result = 100%
-- Closed = 04 / 11 / 2021
+<p align="center">
+	<b><i>CURSUS: 2019 - AUTHOR: fmanetti - GRADE: 100 - FINISHED: 04/11/2021</i></b><br>
+</p>
 
-![image](./image.png)
+<p align="center">
+	The standard C++ containers have all a specific usage. To make sure you understand them, let’s re-implement them!
+</p>
 
-## Description
-
-The multiple available containers in C++ all have very different usage. To
-make sure you understand them, let’s re-implement them!
-
-
-## Skills
-* Rigor
-* Object-oriented programming
+![image](https://github.com/manettifabrizio/42cursus_srcs/blob/main/images/ft_containers.gif)
 
 ## Introduction
 
 In this project, you will implement the various container types of the C++ standard
-template library.
-For each container, turn in the appropriately named class files.
-The namespace will always be ft and your containers will be tested using ft::<container>.
-You need to respect the structure of the reference container. If it’s missing a part of the
-orthodox canonical form, do not implement it.
-As a reminder, we are coding in C++98, so any new feature of the containers MUST NOT
-be implemented, but every old feature (even deprecated) is expected.
+template library. For each container, turn in the appropriately named class files. The namespace will always be ft and your containers will be tested using ft::<container>.
+You need to respect the structure of the reference container. If it’s missing a part of the orthodox canonical form, do not implement it. As a reminder, we are coding in C++98, so any new feature of the containers MUST NOT be implemented, but every old feature (even deprecated) is expected.
 
-## Vector
+### Disclaimer
+
+At 42 school when we program in C we are subject to a set of rules called [**the norm**](https://github.com/manettifabrizio/42cursus_srcs/blob/main/subjects/norm/en.norme_v2.pdf), so if the code is not 100% optimized this is the reason. This project was coded following norminette v2.
+
+## Implemented Containers Functions
+
+### Vector
 
 - [x] constructor
 - [x] destructor
 - [x] operators
 
-- [ ] Iterators
+- Iterators
     - [x] begin
     - [x] end
     - [x] rbegin
     - [x] rend
 
-- [ ] Capacity
+- Capacity
     - [x] size
     - [x] max_size 
     - [x] resize
@@ -48,13 +44,13 @@ be implemented, but every old feature (even deprecated) is expected.
     - [x] empty
     - [x] reserve
 
-- [ ] Element access
+- Element access
     - [x] operator[]
     - [x] at
     - [x] front
     - [x] back
 
-- [ ] Modifiers
+- Modifiers
     - [x] assign
     - [x] push_back
     - [x] pop_back
@@ -63,58 +59,57 @@ be implemented, but every old feature (even deprecated) is expected.
     - [x] swap
     - [x] clear
 
-
-- [ ] Allocator
+- Allocator
     - [x] get_allocator
 
-- [ ] Non-member function overloads
+- Non-member function overloads
     - [x] relational operators
     - [x] swap
 
 
-## Map
+### Map
 
 - [x] constructor
 - [x] destructor
 - [x] operator=
 
-- [ ] Iterators
+- Iterators
     - [x] begin
     - [x] end
     - [x] rbegin
     - [x] rend
 
-- [ ] Capacity
+- Capacity
     - [x] empty
     - [x] max_size 
     - [x] size
 
-- [ ] Element access
+- Element access
     - [x] operator[]
 
-- [ ] Modifiers
+- Modifiers
     - [x] insert
     - [x] erase
     - [x] swap
     - [x] clear
 
-- [ ] Observers
+- Observers
     - [x] key_comp
     - [x] value_comp
 
-- [ ] Operations
+- Operations
     - [x] find
     - [x] count
     - [x] lower_bound
     - [x] upper_bound
     - [x] equal_range
 
-- [ ] Allocator
+- Allocator
     - [x] get_allocator
 
-## Stack
+### Stack
 
-- [ ] Member function
+- Member function
     - [x] constructor
     - [x] size
     - [x] empty
@@ -122,9 +117,54 @@ be implemented, but every old feature (even deprecated) is expected.
     - [x] push
     - [x] pop
 
-- [ ] Non-member function overloads
+- Non-member function overloads
     - [x] relational operators
     - [x] swap
+
+## Usage
+
+### Requirements
+
+The containers are written in C++ language and thus needs the **`clang++` compiler** and some standard **C++ libraries** to run.
+
+**Using it in your code**
+
+To use the containers in your code, simply include them:
+
+```C++
+#include "Vector.hpp"
+#include "Map.hpp"
+#include "Stack.hpp"
+```
+And use the ft namespace:
+
+```C++
+ft::vector<int> myvector;
+```
+
+### Tester
+
+I've included a tester for this project that can be used in the following ways:
+
+All containers
+```s
+./test.sh
+```
+
+Specific containers
+```
+./test.sh <container> <container1>
+```
+
+One test
+```
+./test.sh -o <container> <file>
+```
+
+Clean files
+```
+./test.sh -c
+```
 
 ## Sources
 
